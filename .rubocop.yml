@@ -1,0 +1,108 @@
+plugins:
+  - rubocop-performance
+  - rubocop-rspec
+
+AllCops:
+  TargetRubyVersion: 3.3
+  NewCops: enable
+  SuggestExtensions: false
+  Exclude:
+    - 'spec/fixtures/**/*'
+    - 'vendor/**/*'
+    - 'tmp/**/*'
+
+Layout/EndOfLine:
+  EnforcedStyle: lf
+
+Layout/HashAlignment:
+  EnforcedHashRocketStyle:
+    - key
+    - table
+  EnforcedColonStyle:
+    - key
+    - table
+
+# Renderers assemble strings from several small pieces; 20 keeps them readable
+# without splitting methods just to satisfy the default of 17.
+# TODO: disable these in code, or fix them
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/BlockLength:
+  AllowedMethods:
+    - describe
+    - context
+    - shared_examples
+    - shared_content
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+    - method_call
+
+Metrics/ClassLength:
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+    - method_call
+
+Metrics/MethodLength:
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+    - method_call
+
+Metrics/ModuleLength:
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+    - method_call
+
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
+# Allow underscore to indicate private variable.
+Naming/MemoizedInstanceVariableName:
+  EnforcedStyleForLeadingUnderscores: optional
+
+Performance/RedundantMerge:
+  MaxKeyValuePairs: 1
+
+RSpec/ExampleLength:
+  CountAsOne:
+    - array
+    - hash
+    - heredoc
+    - method_call
+
+RSpec/NestedGroups:
+  Max: 4
+
+RSpec/MultipleMemoizedHelpers:
+  Enabled: false
+
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Style/FormatStringToken:
+  Enabled: false
+
+Style/Lambda:
+  Enabled: false
+
+Style/SymbolArray:
+  MinSize: 3
+
+Style/WordArray:
+  MinSize: 3
+
+# # Parser and renderer specs assert several facets of one parsed snippet.
+# RSpec/MultipleExpectations:
+#   Max: 6
+
+# # One spec file covers a small group of collaborating classes.
+# RSpec/SpecFilePathFormat:
+#   Enabled: false

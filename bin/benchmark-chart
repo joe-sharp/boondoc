@@ -1,0 +1,184 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Draws the performance table in docs/Performance.md as bar charts, one panel per codebase and one bar
+# per tool, each panel on its own linear scale. Writes a light and a dark SVG
+# that the README shows through a <picture> element. Run it after updating the table with
+# bin/benchmark --for-docs.
+#
+#   bin/benchmark-chart
+
+require 'cgi'
+require 'fileutils'
+
+ROOT = File.expand_path('..', __dir__)
+PERFORMANCE = File.join(ROOT, 'docs', 'Performance.md')
+OUT_DIR = File.join(ROOT, 'images')
+
+# The table columns drawn, in the order of their colors: green, yellow, red, blue.
+TOOLS = ['Boondoc', 'YARD + yard-markdown', 'YARD', 'RDoc'].freeze
+
+Theme = Data.define(:surface, :ink, :secondary, :muted, :grid, :series)
+
+THEMES = {
+  'light' => Theme.new(surface: '#fcfcfb', ink: '#0b0b0b', secondary: '#52514e', muted: '#898781', grid: '#e1e0d9',
+                       series: %w[#008300 #eda100 #e34948 #2a78d6]),
+  'dark' => Theme.new(surface: '#1a1a19', ink: '#f0efec', secondary: '#c3c2b7', muted: '#898781', grid: '#2c2c2a',
+                      series: %w[#008300 #c98500 #d9455f #5b9be0])
+}.freeze
+
+# The header and body rows of the table in docs/Performance.md.
+def table
+  rows = File.read(PERFORMANCE).lines.grep(/^\|/).map do |line|
+    line.strip.delete_prefix('|').delete_suffix('|').split('|').map { |cell| cell.strip.delete('`') }
+  end
+  header, _rule, *body = rows
+  [header, body]
+end
+
+# One theme's SVG of the table: a panel per codebase, each a bar per tool on its own linear scale.
+class Chart
+  FONT = "system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif"
+  TITLE = 'Time to document a codebase'
+  SUBTITLE = 'Seconds, median of runs. Lower is better. Each panel has its own scale.'
+  NOTE = ["RDoc can't parse metasploit,", 'so it is not shown.'].freeze
+
+  WIDTH = 800
+  COLUMNS = 3
+  CELL = { width: 256, height: 200, left: 16, top: 105 }.freeze
+  AXIS_WIDTH = 34
+  PLOT_TOP = 26
+  PLOT_HEIGHT = 125
+  BAR_WIDTH = 38
+  SLOT = 46
+  HEIGHT = CELL[:top] + (CELL[:height] * 2) - 20
+
+  Codebase = Struct.new(:name, :lines, :times)
+
+  # Gridlines set by hand for a codebase, instead of the ones ticks_for works out from its largest time.
+  FIXED_TICKS = { 'metasploit' => [0.0, 150.0, 300.0, 450.0] }.freeze
+
+  # A panel's plot area, whose y scale runs from zero to its last tick.
+  Plot = Struct.new(:left, :top, :ticks) do
+    def bottom = top + PLOT_HEIGHT
+    def bar_x(index) = left + (SLOT * index) + ((SLOT - BAR_WIDTH) / 2)
+    def y_at(time) = (bottom - (time / ticks.last * PLOT_HEIGHT)).round(1)
+  end
+
+  def initialize(theme, header, body)
+    @theme = theme
+    columns = TOOLS.map { |tool| header.index(tool) or abort "No #{tool} column in the performance table" }
+    @codebases = body.map do |row|
+      Codebase.new(codebase_name(row[0]), row[2].delete(',').to_i,
+                   columns.map { |column| Float(row[column], exception: false) })
+    end
+  end
+
+  def to_s
+    out = frame
+    @codebases.each_with_index { |codebase, i| out.concat(panel(codebase, i)) }
+    out << note(@codebases.size) if @codebases.any? { |codebase| codebase.times.include?(nil) }
+    "#{out.join("\n")}\n</svg>\n"
+  end
+
+  private
+
+  def frame
+    [%(<svg xmlns="http://www.w3.org/2000/svg" width="#{WIDTH}" height="#{HEIGHT}" viewBox="0 0 #{WIDTH} #{HEIGHT}" ) +
+      %(font-family="#{FONT}" style="font-variant-numeric: tabular-nums">),
+     %(<rect width="100%" height="100%" rx="8" fill="#{@theme.surface}"/>),
+     text([16, 30], TITLE, @theme.ink, size: 16, weight: '600'),
+     text([16, 50], SUBTITLE, @theme.secondary)] + legend
+  end
+
+  def legend
+    x = 16
+    TOOLS.each_with_index.flat_map do |tool, i|
+      swatch = %(<rect x="#{x}" y="65" width="12" height="12" rx="3" fill="#{@theme.series[i]}"/>)
+      label = text([x + 18, 75], tool, @theme.secondary)
+      x += 36 + (tool.length * 7)
+      [swatch, label]
+    end
+  end
+
+  # Left edge and top of the grid cell at an index, left to right and then down.
+  def cell_origin(index)
+    [CELL[:left] + (index % COLUMNS * CELL[:width]), CELL[:top] + (index / COLUMNS * CELL[:height])]
+  end
+
+  # A codebase's name and size, its gridlines, and a bar for each tool that has a time.
+  def panel(codebase, index)
+    x0, y0 = cell_origin(index)
+    ticks = FIXED_TICKS.fetch(codebase.name) { ticks_for(codebase.times.compact.max) }
+    plot = Plot.new(x0 + AXIS_WIDTH, y0 + PLOT_TOP, ticks)
+    heading(codebase, [x0, y0]) + axis(plot) + bars(codebase, plot)
+  end
+
+  def heading(codebase, origin)
+    x0, y0 = origin
+    [text([x0, y0 + 8], codebase.name, @theme.ink, weight: '600'),
+     text([x0 + 8 + (codebase.name.length * 7), y0 + 8], "#{short_count(codebase.lines)} lines", @theme.muted)]
+  end
+
+  def axis(plot)
+    plot.ticks.flat_map do |tick|
+      y = plot.y_at(tick)
+      [%(<line x1="#{plot.left}" y1="#{y}" x2="#{plot.left + (SLOT * TOOLS.size)}" y2="#{y}" stroke="#{@theme.grid}"/>),
+       text([plot.left - 8, y + 4], format('%g', tick), @theme.muted, size: 11, anchor: 'end')]
+    end
+  end
+
+  def bars(codebase, plot)
+    codebase.times.each_with_index.flat_map do |time, i|
+      next [] unless time
+
+      x = plot.bar_x(i)
+      y = plot.y_at(time)
+      [bar([x, y, plot.bottom - y], @theme.series[i], "#{TOOLS[i]} on #{codebase.name}: #{time} s"),
+       text([x + (BAR_WIDTH / 2), y - 6], format_time(time), @theme.ink, size: 11, anchor: 'middle')]
+    end
+  end
+
+  def bar(box, color, title)
+    x, y, height = box
+    %(<rect x="#{x}" y="#{y}" width="#{BAR_WIDTH}" height="#{height.round(1)}" rx="2" fill="#{color}">) +
+      %(<title>#{CGI.escapeHTML(title)}</title></rect>)
+  end
+
+  # In the first free cell after the panels.
+  def note(index)
+    x0, y0 = cell_origin(index)
+    NOTE.each_with_index.map do |line, i|
+      text([x0 + AXIS_WIDTH, y0 + PLOT_TOP + 60 + (i * 16)], line, @theme.secondary)
+    end.join("\n")
+  end
+
+  # Gridline values from zero up to the first round number at or above the largest time.
+  def ticks_for(max)
+    raw = max / 3.0
+    magnitude = 10**Math.log10(raw).floor
+    step = [1, 2, 5, 10].map { |m| m * magnitude }.find { |candidate| candidate >= raw }
+    (0..(max / step).ceil).map { |i| (i * step).to_f.round(10) }
+  end
+
+  def text(pos, str, fill, size: 12, weight: 'normal', anchor: 'start')
+    x, y = pos
+    %(<text x="#{x}" y="#{y}" fill="#{fill}" font-size="#{size}" font-weight="#{weight}" text-anchor="#{anchor}">) +
+      "#{CGI.escapeHTML(str)}</text>"
+  end
+
+  def format_time(time) = time >= 100 ? "#{time.round}s" : format('%.2fs', time)
+
+  # "yard 0.9.45" -> "yard", "metasploit-framework b22ce1f" -> "metasploit", "boondoc" -> "boondoc"
+  def codebase_name(cell) = cell.sub(/ [\d.]+$/, '').sub(/ \h{7}$/, '').sub(/-.*/, '').downcase
+
+  def short_count(lines) = lines >= 1e6 ? format('%.1fM', lines / 1e6) : format('%.0fk', lines / 1e3)
+end
+
+header, body = table
+FileUtils.mkdir_p(OUT_DIR)
+THEMES.each do |name, theme|
+  path = File.join(OUT_DIR, "benchmark-#{name}.svg")
+  File.write(path, Chart.new(theme, header, body).to_s)
+  warn "Wrote #{path.delete_prefix("#{ROOT}/")}"
+end
