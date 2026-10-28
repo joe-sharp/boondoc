@@ -21,12 +21,12 @@ attr_reader :value
 
 | Method | Summary |
 | --- | --- |
-| [`#initialize(name, namespace, value: '')`](#method-i-initialize) |  |
+| [`#initialize(name, namespace, value: "")`](#method-i-initialize) |  |
 
 ### <a id="method-i-initialize"></a>`#initialize`
 
 ```ruby
-def initialize(name, namespace, value: '')
+def initialize(name, namespace, value: "")
 ```
 
 **Parameters:**

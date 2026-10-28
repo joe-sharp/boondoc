@@ -20,7 +20,7 @@ module Boondoc
       }.freeze
       ALWAYS_PRIVATE = %w[initialize_copy initialize_clone initialize_dup respond_to_missing?].freeze
       ATTR_READERS_ONLY = %i[attr attr_reader].freeze
-      ANONYMOUS = { 'Struct' => :new, 'Data' => :define, 'Class' => :new, 'Module' => :new }.freeze
+      ANONYMOUS = { "Struct" => :new, "Data" => :define, "Class" => :new, "Module" => :new }.freeze
 
       # @param registry [Model::Registry]
       # @param file [String] file name recorded on each object
@@ -126,7 +126,7 @@ module Boondoc
       end
 
       def ensure_namespace(name, kind)
-        parts = name.delete_prefix('::').split('::')
+        parts = name.delete_prefix("::").split("::")
         parent = namespace_base(name, parts)
         parts.each_with_index do |part, index|
           last = index == parts.size - 1
@@ -139,7 +139,7 @@ module Boondoc
       # the namespace that already holds the first segment for `Foo::Bar`, and
       # the current namespace otherwise.
       def namespace_base(name, parts)
-        return @registry.root if name.start_with?('::')
+        return @registry.root if name.start_with?("::")
         return frame.namespace if parts.size == 1
 
         @registry.resolve(frame.namespace, parts.first)&.namespace || frame.namespace
@@ -158,13 +158,13 @@ module Boondoc
 
       def anonymous_namespace?(value)
         value.is_a?(::Prism::CallNode) && value.receiver &&
-          ANONYMOUS[value.receiver.slice.delete_prefix('::')] == value.name
+          ANONYMOUS[value.receiver.slice.delete_prefix("::")] == value.name
       end
 
       # `Foo = Struct.new(:a)`, `Foo = Data.define(:a)`, `Foo = Class.new(Base)`
       def define_anonymous(node, value)
-        receiver = value.receiver.slice.delete_prefix('::')
-        namespace = ensure_namespace(node.name.to_s, receiver == 'Module' ? :module : :class)
+        receiver = value.receiver.slice.delete_prefix("::")
+        namespace = ensure_namespace(node.name.to_s, (receiver == "Module") ? :module : :class)
         namespace.superclass ||= anonymous_superclass(receiver, value)
         document(namespace, line(node))
         with_frame(namespace) do
@@ -175,7 +175,7 @@ module Boondoc
 
       def anonymous_superclass(receiver, value)
         return receiver if %w[Struct Data].include?(receiver)
-        return nil unless receiver == 'Class'
+        return nil unless receiver == "Class"
 
         first = arguments(value).first
         first.slice if first.is_a?(::Prism::ConstantReadNode) || first.is_a?(::Prism::ConstantPathNode)
@@ -186,7 +186,7 @@ module Boondoc
 
         arguments(value).grep(::Prism::SymbolNode).each do |member|
           add_method(member.unescaped, :instance, line, attribute: :reader, documented: false)
-          next if receiver == 'Data'
+          next if receiver == "Data"
 
           add_method("#{member.unescaped}=", :instance, line, attribute: :writer, documented: false)
         end
@@ -196,7 +196,7 @@ module Boondoc
 
       def def_scope(node)
         case node.receiver
-        when nil then frame.singleton || frame.module_function ? :class : :instance
+        when nil then (frame.singleton || frame.module_function) ? :class : :instance
         when ::Prism::SelfNode then :class
         else :class if [frame.namespace.name, frame.namespace.path].include?(node.receiver.slice)
         end
@@ -258,7 +258,7 @@ module Boondoc
       end
 
       def on_class_visibility(node)
-        visibility = node.name == :private_class_method ? :private : :public
+        visibility = (node.name == :private_class_method) ? :private : :public
         apply_visibility(arguments(node), visibility, :class)
       end
 
@@ -323,7 +323,7 @@ module Boondoc
       end
 
       def on_mixin(node)
-        kind = frame.singleton && node.name == :include ? :extend : node.name
+        kind = (frame.singleton && node.name == :include) ? :extend : node.name
         arguments(node).each do |arg|
           next unless arg.is_a?(::Prism::ConstantReadNode) || arg.is_a?(::Prism::ConstantPathNode)
 

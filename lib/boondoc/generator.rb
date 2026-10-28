@@ -25,7 +25,7 @@ module Boondoc
     def run
       report_config
       files = @config.source_files
-      raise Error, "no Ruby files matched #{Array(@config.sources).join(', ')}" if files.empty?
+      raise Error, "no Ruby files matched #{Array(@config.sources).join(", ")}" if files.empty?
 
       parse(files)
       pages = render
@@ -72,7 +72,7 @@ module Boondoc
       elsif @registry.directive_sites.any?
         sites = @registry.directive_sites
         @reporter.warn("#{sites.size} comment(s) use YARD directives (@!macro, @!method, ...), which boondoc " \
-                       "does not expand on its own; rerun with --yard-macros. First: #{sites.first(3).join(', ')}")
+                       "does not expand on its own; rerun with --yard-macros. First: #{sites.first(3).join(", ")}")
       end
     end
 
@@ -81,8 +81,8 @@ module Boondoc
       @reporter.info("yard: added #{added} object(s) from macros and directives")
       return unless yard_files.empty?
 
-      @reporter.warn('yard: no YARD macros or directives were found; disable yard_macros ' \
-                     '(--yard-macros) for this project')
+      @reporter.warn("yard: no YARD macros or directives were found; disable yard_macros " \
+                     "(--yard-macros) for this project")
     end
 
     def pages_for(context)
@@ -100,7 +100,7 @@ module Boondoc
     def namespace_pages(context)
       namespaces = @registry.grep(Model::NamespaceObject).select { |namespace| context.filter.visible?(namespace) }
       namespaces.to_h { |namespace| [namespace, Renderer::NamespacePage.new(context, namespace)] }
-                .select { |_, page| page.content? }
+        .select { |_, page| page.content? }
     end
 
     def finish(pages, assets, removed)

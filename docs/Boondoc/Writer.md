@@ -13,7 +13,7 @@ not changed is not written again.
 ### <a id="constant-MANIFEST"></a>`MANIFEST`
 
 ```ruby
-MANIFEST = '.boondoc-manifest'
+MANIFEST = ".boondoc-manifest"
 ```
 
 ## Instance methods

@@ -27,7 +27,7 @@ module Boondoc
 
       # @return [String] the fully qualified path, such as `Foo::Bar#baz`
       def path
-        namespace.nil? || namespace.root? ? name : "#{namespace.path}::#{name}"
+        (namespace.nil? || namespace.root?) ? name : "#{namespace.path}::#{name}"
       end
 
       # @return [Boolean]
@@ -46,7 +46,7 @@ module Boondoc
 
       # @return [Boolean] true when tagged `@private` or `@api private`
       def private_api?
-        docstring.tag?('private') || docstring.tags_named('api').any? { |tag| tag.text.strip == 'private' }
+        docstring.tag?("private") || docstring.tags_named("api").any? { |tag| tag.text.strip == "private" }
       end
     end
 
@@ -73,7 +73,7 @@ module Boondoc
 
       # @return [String] empty for the root
       def path
-        root? ? '' : super
+        root? ? "" : super
       end
 
       # @return [Boolean]
@@ -95,7 +95,7 @@ module Boondoc
       # @return [Array<MethodObject>] methods in that scope, `initialize` first, then by name
       def meths(scope)
         children.grep(MethodObject).select { |meth| meth.scope == scope }
-                .sort_by { |meth| [meth.name == 'initialize' ? 0 : 1, meth.name] }
+          .sort_by { |meth| [(meth.name == "initialize") ? 0 : 1, meth.name] }
       end
     end
 
@@ -129,12 +129,12 @@ module Boondoc
       # @param name [String]
       # @return [String] the path a method with that name and scope would have
       def self.path_for(namespace, scope, name)
-        "#{namespace.path}#{scope == :class ? '.' : '#'}#{name}"
+        "#{namespace.path}#{(scope == :class) ? "." : "#"}#{name}"
       end
 
       # @return [String] `#` for instance methods, `.` for class methods
       def separator
-        scope == :class ? '.' : '#'
+        (scope == :class) ? "." : "#"
       end
 
       # @return [String]
@@ -156,7 +156,7 @@ module Boondoc
       # @param name [String]
       # @param namespace [NamespaceObject]
       # @param value [String]
-      def initialize(name, namespace, value: '')
+      def initialize(name, namespace, value: "")
         super(name, namespace)
         @value = value
       end

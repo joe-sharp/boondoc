@@ -3,7 +3,7 @@
 module Boondoc
   # Splits a YARD type list such as `[String, Hash{Symbol => Array<Integer>}]`.
   module TypeParser
-    OPENERS = { '[' => ']', '<' => '>', '(' => ')', '{' => '}' }.freeze
+    OPENERS = { "[" => "]", "<" => ">", "(" => ")", "{" => "}" }.freeze
     # Duck types naming an operator method that contains bracket characters.
     OPERATOR_DUCK_TYPE = /#(?:<=>|<<|>>|[<>]=?|\[\]=?)/
 
@@ -16,7 +16,7 @@ module Boondoc
     #   when the text does not start with `[`) and the remaining text
     def extract(text)
       text = text.lstrip
-      return [nil, text] unless text.start_with?('[')
+      return [nil, text] unless text.start_with?("[")
 
       close = closing_index(text)
       return [nil, text] unless close
@@ -29,9 +29,9 @@ module Boondoc
     # @param list [String] the text between the outer brackets
     # @return [Array<String>]
     def split(list)
-      types = ['']
+      types = [""]
       each_with_depth(list) do |char, _, depth|
-        next types << +'' if char == ',' && depth.zero?
+        next types << +"" if char == "," && depth.zero?
 
         types[-1] += char
       end
@@ -72,7 +72,7 @@ module Boondoc
       return 0 unless OPENERS.value?(char)
 
       # The `>` of a hash rocket (`=>`) does not close anything.
-      char == '>' && index.positive? && text[index - 1] == '=' ? 0 : -1
+      (char == ">" && index.positive? && text[index - 1] == "=") ? 0 : -1
     end
   end
 end

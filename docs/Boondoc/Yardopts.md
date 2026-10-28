@@ -35,7 +35,7 @@ Long options of the yard gem that take an argument.
 ### <a id="constant-FILE"></a>`FILE`
 
 ```ruby
-FILE = '.yardopts'
+FILE = ".yardopts"
 ```
 
 ### <a id="constant-NON_RUBY_SOURCE"></a>`NON_RUBY_SOURCE`
@@ -64,15 +64,15 @@ How long a pattern from `--exclude` may take to match one path.
 
 ```ruby
 SHORT_ARGUMENT_OPTIONS = {
-      'b' => '--db', 'e' => '--load', 'o' => '--output-dir', 'm' => '--markup', 'M' => '--markup-provider',
-      't' => '--template', 'p' => '--template-path', 'f' => '--format', 'r' => '--readme'
+      "b" => "--db", "e" => "--load", "o" => "--output-dir", "m" => "--markup", "M" => "--markup-provider",
+      "t" => "--template", "p" => "--template-path", "f" => "--format", "r" => "--readme"
     }.freeze
 ```
 
 ### <a id="constant-SHORT_OPTIONAL_ARGUMENT_OPTIONS"></a>`SHORT_OPTIONAL_ARGUMENT_OPTIONS`
 
 ```ruby
-SHORT_OPTIONAL_ARGUMENT_OPTIONS = { 'c' => '--use-cache' }.freeze
+SHORT_OPTIONAL_ARGUMENT_OPTIONS = { "c" => "--use-cache" }.freeze
 ```
 
 ## Attributes

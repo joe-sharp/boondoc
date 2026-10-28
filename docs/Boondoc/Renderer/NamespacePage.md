@@ -24,13 +24,13 @@ A guard against a superclass chain that never ends; real chains are far shorter.
 ### <a id="constant-MIXINS"></a>`MIXINS`
 
 ```ruby
-MIXINS = { include: 'Includes', extend: 'Extended by', prepend: 'Prepended by' }.freeze
+MIXINS = { include: "Includes", extend: "Extended by", prepend: "Prepended by" }.freeze
 ```
 
 ### <a id="constant-SCOPES"></a>`SCOPES`
 
 ```ruby
-SCOPES = { class: 'Class methods', instance: 'Instance methods' }.freeze
+SCOPES = { class: "Class methods", instance: "Instance methods" }.freeze
 ```
 
 ## Instance methods

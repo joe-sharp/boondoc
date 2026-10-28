@@ -23,7 +23,7 @@ ALWAYS_PRIVATE = %w[initialize_copy initialize_clone initialize_dup respond_to_m
 ### <a id="constant-ANONYMOUS"></a>`ANONYMOUS`
 
 ```ruby
-ANONYMOUS = { 'Struct' => :new, 'Data' => :define, 'Class' => :new, 'Module' => :new }.freeze
+ANONYMOUS = { "Struct" => :new, "Data" => :define, "Class" => :new, "Module" => :new }.freeze
 ```
 
 ### <a id="constant-ATTR_READERS_ONLY"></a>`ATTR_READERS_ONLY`

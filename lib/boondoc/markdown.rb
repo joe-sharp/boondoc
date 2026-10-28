@@ -19,13 +19,13 @@ module Boondoc
     # @return [String]
     def map_prose(text, &)
       state = { fence: nil, indented: false, blank: true, list: false }
-      output = +''
-      prose = +''
+      output = +""
+      prose = +""
       text.each_line do |line|
         next prose << line unless code_line?(line, state)
 
         output << map_inline(prose, &) << line
-        prose = +''
+        prose = +""
       end
       output << map_inline(prose, &)
     end
@@ -33,7 +33,7 @@ module Boondoc
     # @param text [String] a single table cell
     # @return [String] the text on one line with pipes escaped
     def table_cell(text)
-      text.gsub(/\s*\n\s*/, ' ').gsub('|', '\\|').strip
+      text.gsub(/\s*\n\s*/, " ").gsub("|", '\\|').strip
     end
 
     # @api private
@@ -58,7 +58,7 @@ module Boondoc
 
     # @api private
     def in_list?(line, blank, state)
-      LIST_ITEM.match?(line) || (state[:list] && (blank || line.start_with?(' ', "\t")))
+      LIST_ITEM.match?(line) || (state[:list] && (blank || line.start_with?(" ", "\t")))
     end
 
     # @api private
@@ -77,7 +77,7 @@ module Boondoc
     def map_inline(prose)
       return prose if prose.empty?
 
-      output = +''
+      output = +""
       position = 0
       prose.scan(INLINE_CODE) do
         match = Regexp.last_match

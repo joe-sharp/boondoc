@@ -14,34 +14,34 @@ RSpec.describe Boondoc::Preview do
   end
 
   def commands
-    answers.map { |command| command.join(' ') }
+    answers.map { |command| command.join(" ") }
   end
 
-  context 'when gh and the extension are installed' do
+  context "when gh and the extension are installed" do
     let(:results) { {} }
 
-    it 'starts the previewer inside the docs directory on 127.0.0.1' do
+    it "starts the previewer inside the docs directory on 127.0.0.1" do
       Dir.mktmpdir do |dir|
         instance = preview(dir)
         instance.start
-        expect(instance).to have_received(:system).with('gh', 'markdown-preview', '--host', '127.0.0.1', chdir: dir)
+        expect(instance).to have_received(:system).with("gh", "markdown-preview", "--host", "127.0.0.1", chdir: dir)
       end
     end
 
-    it 'passes the host and port along' do
+    it "passes the host and port along" do
       Dir.mktmpdir do |dir|
-        preview(dir, host: 'localhost', port: 4000).start
-        expect(commands.last).to eq('gh markdown-preview --host localhost --port 4000')
+        preview(dir, host: "localhost", port: 4000).start
+        expect(commands.last).to eq("gh markdown-preview --host localhost --port 4000")
       end
     end
 
-    ['127.0.0.1', '::1', 'localhost'].each do |host|
+    ["127.0.0.1", "::1", "localhost"].each do |host|
       it "does not warn about the loopback host #{host}" do
         Dir.mktmpdir { |dir| expect { preview(dir, host: host).start }.not_to output.to_stderr }
       end
     end
 
-    ['0.0.0.0', '192.168.1.20'].each do |host|
+    ["0.0.0.0", "192.168.1.20"].each do |host|
       it "warns that #{host} exposes any file the user can read, and still serves", :aggregate_failures do
         Dir.mktmpdir do |dir|
           expect { preview(dir, host: host).start }.to output(/exposes .*any file/m).to_stderr
@@ -50,41 +50,41 @@ RSpec.describe Boondoc::Preview do
       end
     end
 
-    it 'fails when the docs have not been generated', :aggregate_failures do
-      expect { preview('/no/such/docs').start }.to raise_error(Boondoc::Error, /run `boondoc` first/)
+    it "fails when the docs have not been generated", :aggregate_failures do
+      expect { preview("/no/such/docs").start }.to raise_error(Boondoc::Error, /run `boondoc` first/)
       expect(commands).to be_empty
     end
   end
 
-  context 'when gh is missing' do
+  context "when gh is missing" do
     let(:results) { { %w[gh --version] => nil } }
 
-    it 'says the GitHub CLI is needed' do
+    it "says the GitHub CLI is needed" do
       Dir.mktmpdir do |dir|
         expect { preview(dir).start }.to raise_error(Boondoc::Error, /needs the GitHub CLI/)
       end
     end
   end
 
-  context 'when the extension is missing' do
+  context "when the extension is missing" do
     let(:results) { { %w[gh markdown-preview --version] => false } }
 
-    it 'installs it after confirmation and then serves' do
+    it "installs it after confirmation and then serves" do
       Dir.mktmpdir do |dir|
         preview(dir) { true }.start
-        expect(commands.last(2)).to eq(['gh extension install yusukebe/gh-markdown-preview',
-                                        'gh markdown-preview --host 127.0.0.1'])
+        expect(commands.last(2)).to eq(["gh extension install yusukebe/gh-markdown-preview",
+                                        "gh markdown-preview --host 127.0.0.1"])
       end
     end
 
-    it 'does not install when the user declines', :aggregate_failures do
+    it "does not install when the user declines", :aggregate_failures do
       Dir.mktmpdir do |dir|
         expect { preview(dir) { false }.start }.to raise_error(Boondoc::Error, /gh extension install/)
         expect(commands).not_to include(a_string_matching(/extension install/))
       end
     end
 
-    it 'reports a failed install' do
+    it "reports a failed install" do
       results[%w[gh extension install]] = false
       Dir.mktmpdir do |dir|
         expect { preview(dir) { true }.start }.to raise_error(Boondoc::Error, /could not install/)

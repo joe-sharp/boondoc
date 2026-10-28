@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'yaml'
+require "yaml"
 
 module Boondoc
   # Options for one run, merged from defaults, `.yardopts`, `.boondoc.yml`, and the command line.
   class Config
-    FILE = '.boondoc.yml'
+    FILE = ".boondoc.yml"
     DEFAULTS = {
-      sources: ['lib/**/*.rb'], exclude: [], output: 'docs', index: 'README.md',
+      sources: ["lib/**/*.rb"], exclude: [], output: "docs", index: "README.md",
       readme: nil, files: [], assets: [], copy_linked_assets: false, title: nil,
       private: false, protected: false, yard_macros: false,
       strict: false, force: false, quiet: false, allow_outside_output: false, yardopts: true
@@ -23,11 +23,11 @@ module Boondoc
     # A test and a description for each type name in {TYPES}.
     CHECKS = {
       list: [->(value) { value.is_a?(String) || (value.is_a?(Array) && value.all?(String)) },
-             'a string or a list of strings'],
-      string: [->(value) { value.is_a?(String) }, 'a string'],
-      optional_string: [->(value) { value.nil? || value.is_a?(String) }, 'a string'],
-      file_or_false: [->(value) { value.nil? || value == false || value.is_a?(String) }, 'a file name or false'],
-      boolean: [->(value) { [true, false].include?(value) }, 'true or false']
+             "a string or a list of strings"],
+      string: [->(value) { value.is_a?(String) }, "a string"],
+      optional_string: [->(value) { value.nil? || value.is_a?(String) }, "a string"],
+      file_or_false: [->(value) { value.nil? || value == false || value.is_a?(String) }, "a file name or false"],
+      boolean: [->(value) { [true, false].include?(value) }, "true or false"]
     }.freeze
 
     attr_reader(*DEFAULTS.keys)
@@ -71,8 +71,8 @@ module Boondoc
       settings = YAML.safe_load_file(path, symbolize_names: true) || {}
       return settings unless settings.key?(:allow_outside_output)
 
-      raise Error, 'allow_outside_output cannot be set in a config file, because the project being ' \
-                   'documented is not trusted to choose it; pass --allow-outside-output on the command line'
+      raise Error, "allow_outside_output cannot be set in a config file, because the project being " \
+                   "documented is not trusted to choose it; pass --allow-outside-output on the command line"
     end
     private_class_method :read_file
 
@@ -84,7 +84,7 @@ module Boondoc
     # @raise [Error] on unknown options, or an option of the wrong type
     def initialize(root: Dir.pwd, from_yardopts: nil, **options)
       unknown = options.keys - DEFAULTS.keys
-      raise Error, "unknown option#{'s' if unknown.size > 1}: #{unknown.join(', ')}" if unknown.any?
+      raise Error, "unknown option#{"s" if unknown.size > 1}: #{unknown.join(", ")}" if unknown.any?
 
       @root = File.expand_path(root)
       @yardopts_file = from_yardopts
@@ -135,7 +135,7 @@ module Boondoc
     # @raise [Error] when an explicitly named README does not exist or is outside the project
     def readme_file
       return nil if readme == false
-      return inside_project('README.md') if readme.nil? && File.file?(File.join(root, 'README.md'))
+      return inside_project("README.md") if readme.nil? && File.file?(File.join(root, "README.md"))
       return nil if readme.nil?
       raise Error, "readme not found: #{readme}" unless File.file?(File.expand_path(readme, root))
 
@@ -159,8 +159,8 @@ module Boondoc
 
     def source_split
       @source_split ||= (expand(sources, ruby: true) - expand(exclude, ruby: true))
-                        .reject { |path| excluded_by_yardopts?(path) }
-                        .partition { |path| Containment.inside?(File.expand_path(path, root), root) }
+        .reject { |path| excluded_by_yardopts?(path) }
+        .partition { |path| Containment.inside?(File.expand_path(path, root), root) }
     end
 
     def excluded_by_yardopts?(path)
@@ -170,16 +170,16 @@ module Boondoc
     end
 
     def check_output_inside(path)
-      return if path == root || path.start_with?(File.join(root, ''))
+      return if path == root || path.start_with?(File.join(root, ""))
 
       raise Error, "output directory #{path} is outside the project (#{root}). A project must not choose where " \
-                   'boondoc writes. To write there anyway, pass --allow-outside-output; that is a security ' \
-                   'risk if you do not trust the project, and it is how docs are kept outside the repository.'
+                   "boondoc writes. To write there anyway, pass --allow-outside-output; that is a security " \
+                   "risk if you do not trust the project, and it is how docs are kept outside the repository."
     end
 
     def expand(patterns, ruby: false)
       Array(patterns).flat_map do |pattern|
-        pattern = File.join(pattern, '**', '*.rb') if ruby && File.directory?(File.expand_path(pattern, root))
+        pattern = File.join(pattern, "**", "*.rb") if ruby && File.directory?(File.expand_path(pattern, root))
         paths = Dir.glob(pattern, base: root).select { |path| File.file?(File.expand_path(path, root)) }
         paths.map { |path| relative(path) }
       end.uniq.sort
@@ -188,7 +188,7 @@ module Boondoc
     # Paths under the root become relative to it, with `..` segments resolved.
     def relative(path)
       absolute = File.expand_path(path, root)
-      absolute.start_with?(File.join(root, '')) ? absolute.delete_prefix(File.join(root, '')) : path
+      absolute.start_with?(File.join(root, "")) ? absolute.delete_prefix(File.join(root, "")) : path
     end
 
     # Files that are copied into the output must not come from elsewhere on the machine.

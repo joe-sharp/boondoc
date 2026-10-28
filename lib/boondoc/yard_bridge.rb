@@ -41,13 +41,13 @@ module Boondoc
     private
 
     def load_yard
-      require 'yard'
+      require "yard"
     rescue LoadError
       raise Error, "--yard-macros needs the yard gem. Add `gem 'yard'` to your Gemfile or run `gem install yard`."
     end
 
     def yard_objects
-      namespaces = ::YARD::Registry.all(:module, :class).sort_by { |object| object.path.count(':') }
+      namespaces = ::YARD::Registry.all(:module, :class).sort_by { |object| object.path.count(":") }
       namespaces + ::YARD::Registry.all(:constant, :method)
     end
 
@@ -71,7 +71,7 @@ module Boondoc
     end
 
     def relative(file)
-      prefix = File.join(@root, '')
+      prefix = File.join(@root, "")
       file.start_with?(prefix) ? file.delete_prefix(prefix) : file
     end
 
@@ -92,7 +92,7 @@ module Boondoc
     end
 
     def build_method(yard_object, name, namespace)
-      attribute = (name.end_with?('=') ? :writer : :reader) if yard_object.is_attribute?
+      attribute = (name.end_with?("=") ? :writer : :reader) if yard_object.is_attribute?
       Model::MethodObject.new(name, namespace, scope: yard_object.scope, attribute: attribute,
                                                parameters: parameters(yard_object))
     end
@@ -101,9 +101,9 @@ module Boondoc
       list = yard_object.parameters.map do |name, default|
         next name.to_s unless default
 
-        name.to_s.end_with?(':') ? "#{name} #{default}" : "#{name} = #{default}"
+        name.to_s.end_with?(":") ? "#{name} #{default}" : "#{name} = #{default}"
       end
-      list.empty? ? nil : list.join(', ')
+      list.empty? ? nil : list.join(", ")
     end
 
     def docstring(yard_object)

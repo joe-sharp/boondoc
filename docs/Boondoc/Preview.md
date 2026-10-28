@@ -13,13 +13,13 @@ so it is always started from inside the output directory.
 ### <a id="constant-DEFAULT_HOST"></a>`DEFAULT_HOST`
 
 ```ruby
-DEFAULT_HOST = '127.0.0.1'
+DEFAULT_HOST = "127.0.0.1"
 ```
 
 ### <a id="constant-EXTENSION"></a>`EXTENSION`
 
 ```ruby
-EXTENSION = 'yusukebe/gh-markdown-preview'
+EXTENSION = "yusukebe/gh-markdown-preview"
 ```
 
 ### <a id="constant-LOOPBACK_HOSTS"></a>`LOOPBACK_HOSTS`

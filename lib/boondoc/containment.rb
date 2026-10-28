@@ -14,7 +14,7 @@ module Boondoc
     def inside?(path, directory)
       real = File.realpath(path)
       base = File.realpath(directory)
-      real == base || real.start_with?(File.join(base, ''))
+      real == base || real.start_with?(File.join(base, ""))
     rescue SystemCallError
       false
     end
@@ -29,11 +29,11 @@ module Boondoc
     # @return [String, nil] the first component that is a symlink, or nil when
     #   there is none or `path` is not below `directory`
     def symlink_between(path, directory)
-      base = File.join(File.expand_path(directory), '')
+      base = File.join(File.expand_path(directory), "")
       full = File.expand_path(path)
       return nil unless full.start_with?(base)
 
-      parts = full.delete_prefix(base).split('/')
+      parts = full.delete_prefix(base).split("/")
       parts.each_index.map { |count| File.join(base, *parts.first(count + 1)) }.find { |step| File.symlink?(step) }
     end
   end

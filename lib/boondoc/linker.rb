@@ -6,7 +6,7 @@ module Boondoc
   # Handles `{Foo#bar}`, `{Foo#bar custom text}`, `{https://example.com text}`,
   # `{file:GUIDE.md}`, and the include forms `{include:Foo}` and
   # `{include:file:path.md}`. Code blocks and code spans are left untouched.
-  class Linker # rubocop:disable Metrics/ClassLength -- references and asset links resolved in one place
+  class Linker
     REFERENCE = /(?<escape>\\)?\{(?<target>[^{}\s]+)(?:\s+(?<title>[^{}]+?))?\}/
     INCLUDE = /\{include:(?<file>file:)?(?<target>[^{}\s]+)\}/
     URL = %r{\A(?:[a-z][a-z0-9+.-]*://|mailto:)}i
@@ -69,13 +69,13 @@ module Boondoc
     def types(types, object:, from:)
       return nil if types.nil? || types.empty?
 
-      types.map { |type| type_markup(type, object, from) }.join(', ')
+      types.map { |type| type_markup(type, object, from) }.join(", ")
     end
 
     private
 
     def expand_includes(text, object, depth)
-      return text if depth > MAX_INCLUDE_DEPTH || !text.include?('{include:')
+      return text if depth > MAX_INCLUDE_DEPTH || !text.include?("{include:")
 
       Markdown.map_prose(text) do |prose|
         prose.gsub(INCLUDE) { included(Regexp.last_match, object, depth) }
@@ -101,10 +101,10 @@ module Boondoc
     def reference(match, object, from)
       target = match[:target]
       title = match[:title]&.strip
-      return match[0].delete_prefix('\\') if match[:escape]
-      return match[0] if target.start_with?('include:')
+      return match[0].delete_prefix("\\") if match[:escape]
+      return match[0] if target.start_with?("include:")
       return "[#{title || target}](#{target})" if URL.match?(target)
-      return file_reference(match, target.delete_prefix('file:'), title, from) if target.start_with?('file:')
+      return file_reference(match, target.delete_prefix("file:"), title, from) if target.start_with?("file:")
 
       object_reference(match, title, object, from)
     end
@@ -147,11 +147,11 @@ module Boondoc
 
     # References to Ruby's own classes cannot be linked, but are not mistakes.
     def core?(target)
-      CORE_CONSTANTS.include?(target.delete_prefix('::')[/\A[A-Z]\w*/])
+      CORE_CONSTANTS.include?(target.delete_prefix("::")[/\A[A-Z]\w*/])
     end
 
     def location(object)
-      object.root? ? 'docs' : object.path
+      object.root? ? "docs" : object.path
     end
 
     def type_markup(type, object, from)

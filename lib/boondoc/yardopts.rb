@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'shellwords'
+require "shellwords"
 
 module Boondoc
   # The part of a project's `.yardopts` that Boondoc understands.
@@ -15,7 +15,7 @@ module Boondoc
   #   Boondoc::Yardopts.parse('--title Foo -o doc lib - CHANGELOG.md').settings
   #   # => { title: "Foo", sources: ["lib"], files: ["CHANGELOG.md"] }
   class Yardopts
-    FILE = '.yardopts'
+    FILE = ".yardopts"
     # Long options of the yard gem that take an argument.
     ARGUMENT_OPTIONS = %w[
       --load --plugin --db --exclude --api --no-api --hide-api --default-return --query --title
@@ -26,10 +26,10 @@ module Boondoc
     # Long options whose argument is optional; it is the next token unless that starts with `-`.
     OPTIONAL_ARGUMENT_OPTIONS = %w[--use-cache --yardopts --no-yardopts --embed-mixin].freeze
     SHORT_ARGUMENT_OPTIONS = {
-      'b' => '--db', 'e' => '--load', 'o' => '--output-dir', 'm' => '--markup', 'M' => '--markup-provider',
-      't' => '--template', 'p' => '--template-path', 'f' => '--format', 'r' => '--readme'
+      "b" => "--db", "e" => "--load", "o" => "--output-dir", "m" => "--markup", "M" => "--markup-provider",
+      "t" => "--template", "p" => "--template-path", "f" => "--format", "r" => "--readme"
     }.freeze
-    SHORT_OPTIONAL_ARGUMENT_OPTIONS = { 'c' => '--use-cache' }.freeze
+    SHORT_OPTIONAL_ARGUMENT_OPTIONS = { "c" => "--use-cache" }.freeze
     NON_RUBY_SOURCE = /\.(?:c|cc|cpp|cxx|h|hpp|y)\z/
     # How long a pattern from `--exclude` may take to match one path.
     REGEXP_TIMEOUT = 1.0
@@ -86,9 +86,9 @@ module Boondoc
       notes = []
       if output_dir && File.expand_path(output_dir, root) != File.expand_path(output, root)
         notes << "ignoring --output-dir #{output_dir} from #{FILE}; writing to #{output} " \
-                 '(set output in .boondoc.yml or pass -o to change)'
+                 "(set output in .boondoc.yml or pass -o to change)"
       end
-      notes << "ignoring from #{FILE}: #{ignored.join(', ')}" if ignored.any?
+      notes << "ignoring from #{FILE}: #{ignored.join(", ")}" if ignored.any?
       notes
     end
 
@@ -99,9 +99,9 @@ module Boondoc
       extra = false
       until tokens.empty?
         token = tokens.shift
-        if token == '-' then extra = true
+        if token == "-" then extra = true
         elsif extra then @files << token
-        elsif token.start_with?('-') then read_option(token, tokens)
+        elsif token.start_with?("-") then read_option(token, tokens)
         else add_source(token)
         end
       end
@@ -116,36 +116,36 @@ module Boondoc
     def takes_argument?(name, rest)
       return false if rest.empty?
 
-      ARGUMENT_OPTIONS.include?(name) || (OPTIONAL_ARGUMENT_OPTIONS.include?(name) && !rest.first.start_with?('-'))
+      ARGUMENT_OPTIONS.include?(name) || (OPTIONAL_ARGUMENT_OPTIONS.include?(name) && !rest.first.start_with?("-"))
     end
 
     # @return [Array(String, String)] the canonical long name (or the token itself) and its inline value, if any
     def split_option(token)
-      return token.split('=', 2).values_at(0, 1) if token.start_with?('--')
+      return token.split("=", 2).values_at(0, 1) if token.start_with?("--")
 
       letter = token[1]
       long = SHORT_ARGUMENT_OPTIONS[letter] || SHORT_OPTIONAL_ARGUMENT_OPTIONS[letter]
       return [token, nil] unless long
 
-      [long, token.length > 2 ? token[2..] : nil]
+      [long, (token.length > 2) ? token[2..] : nil]
     end
 
     def apply(name, value)
       case name
-      when '--output-dir' then @output_dir = value
-      when '--title' then @settings[:title] = value
-      when '--readme', '--main' then @settings[:readme] = value
-      when '--files', '--asset' then add_list(name, value)
-      when '--private', '--protected' then @settings[name.delete_prefix('--').to_sym] = true
-      when '--exclude' then add_exclude(value)
+      when "--output-dir" then @output_dir = value
+      when "--title" then @settings[:title] = value
+      when "--readme", "--main" then @settings[:readme] = value
+      when "--files", "--asset" then add_list(name, value)
+      when "--private", "--protected" then @settings[name.delete_prefix("--").to_sym] = true
+      when "--exclude" then add_exclude(value)
       else @ignored << name
       end
     end
 
     # `--files` and `--asset` take comma-separated lists, as YARD does for `--files`.
     def add_list(name, value)
-      list = name == '--asset' ? @assets : @files
-      list.concat(value.to_s.split(','))
+      list = (name == "--asset") ? @assets : @files
+      list.concat(value.to_s.split(","))
     end
 
     def add_source(glob)

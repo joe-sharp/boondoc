@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require 'pathname'
+require "pathname"
 
 module Boondoc
   # A non-API file (README, changelog, guide) that is copied into the output.
   ExtraFile = Struct.new(:source, :output, :content, :readme, keyword_init: true) do
     # @return [String] the first top-level heading, or the file name
     def title
-      content[/^#\s+(.+?)\s*#*\s*$/, 1] || File.basename(source, '.*')
+      content[/^#\s+(.+?)\s*#*\s*$/, 1] || File.basename(source, ".*")
     end
   end
 
@@ -39,7 +39,7 @@ module Boondoc
     # @return [ExtraFile, nil]
     def find(name)
       files.find { |file| file.source == name } ||
-        files.find { |file| [File.basename(file.source), File.basename(file.source, '.*')].include?(name) }
+        files.find { |file| [File.basename(file.source), File.basename(file.source, ".*")].include?(name) }
     end
 
     # Rewrites relative links and image paths so they still point at the same
@@ -62,7 +62,7 @@ module Boondoc
 
     # Sources are relative to the project root; {Config#extra_files} rejects any outside it.
     def output_name(source)
-      MARKDOWN.match?(source) ? source.sub(MARKDOWN, '.md') : "#{source}.md"
+      MARKDOWN.match?(source) ? source.sub(MARKDOWN, ".md") : "#{source}.md"
     end
 
     def relocate(target, file, embedded:)
