@@ -47,7 +47,7 @@ module Boondoc
     end
 
     def continuation?(line)
-      line.strip.empty? || line.start_with?(' ', "\t")
+      line.strip.empty? || line.start_with?(" ", "\t")
     end
 
     def finish_tag
@@ -63,17 +63,17 @@ module Boondoc
 
     def build(name, first, rest)
       case name
-      when 'example'  then Model::Tag.new(tag_name: name, name: first, text: rest)
-      when 'overload' then overload(first, rest)
-      when 'option'   then option(join(first, rest))
-      when 'see'      then see(join(first, rest))
+      when "example"  then Model::Tag.new(tag_name: name, name: first, text: rest)
+      when "overload" then overload(first, rest)
+      when "option"   then option(join(first, rest))
+      when "see"      then see(join(first, rest))
       when *NAMED     then named(name, join(first, rest))
       else typed(name, join(first, rest))
       end
     end
 
     def overload(signature, rest)
-      Model::Tag.new(tag_name: 'overload', signature: signature, docstring: self.class.parse(rest))
+      Model::Tag.new(tag_name: "overload", signature: signature, docstring: self.class.parse(rest))
     end
 
     # `@param name [Types] text` or `@param [Types] name text`
@@ -96,15 +96,15 @@ module Boondoc
       types, text = TypeParser.extract(text.to_s)
       key, text = text.split(/\s+/, 2)
       default = text.to_s[/\A\((.*?)\)\s*/, 1]
-      text = text.to_s.sub(/\A\(.*?\)\s*/, '') if default
-      Model::Tag.new(tag_name: 'option', name: name, types: types, key: key, default: default,
+      text = text.to_s.sub(/\A\(.*?\)\s*/, "") if default
+      Model::Tag.new(tag_name: "option", name: name, types: types, key: key, default: default,
                      text: text.to_s.strip)
     end
 
     # `@see reference text`
     def see(text)
       name, text = text.split(/\s+/, 2)
-      Model::Tag.new(tag_name: 'see', name: name, text: text.to_s.strip)
+      Model::Tag.new(tag_name: "see", name: name, text: text.to_s.strip)
     end
 
     def join(first, rest)
@@ -113,7 +113,7 @@ module Boondoc
 
     def dedent(lines)
       indent = lines.reject { |line| line.strip.empty? }.map { |line| line[/\A[ \t]*/].size }.min || 0
-      lines.map { |line| line[indent..] || '' }.join("\n").strip
+      lines.map { |line| line[indent..] || "" }.join("\n").strip
     end
   end
 end

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
-require 'pathname'
+require "pathname"
 
 module Boondoc
   # Maps objects to output files and anchors, and computes relative links.
   class PathMap
-    TOP_LEVEL = 'top-level.md'
+    TOP_LEVEL = "top-level.md"
 
     # @param config [Config]
     # @param registry [Model::Registry] consulted for classes and modules whose
@@ -30,7 +30,7 @@ module Boondoc
     # @return [String, nil] the anchor inside its file; nil for namespaces
     def anchor_for(object)
       case object
-      when Model::MethodObject then "method-#{object.scope == :class ? 'c' : 'i'}-#{escape(object.name)}"
+      when Model::MethodObject then "method-#{(object.scope == :class) ? "c" : "i"}-#{escape(object.name)}"
       when Model::ConstantObject then "constant-#{escape(object.name)}"
       end
     end
@@ -43,7 +43,7 @@ module Boondoc
       file = file_for(object)
       return "##{anchor}" if anchor && file == from
 
-      [relative(file, from), anchor].compact.join('#')
+      [relative(file, from), anchor].compact.join("#")
     end
 
     # @param file [String] output file to link to
@@ -71,7 +71,7 @@ module Boondoc
         parts.unshift(segments[namespace])
         namespace = namespace.namespace
       end
-      parts.join('/')
+      parts.join("/")
     end
 
     # The file or directory name of every class and module, worked out once
@@ -93,16 +93,16 @@ module Boondoc
       seen = Hash.new(0)
       group.each do |child|
         count = (seen[child.kind] += 1)
-        names[child] = ["#{child.name}.#{child.kind}", (count if count > 1)].compact.join('-')
+        names[child] = ["#{child.name}.#{child.kind}", (count if count > 1)].compact.join("-")
       end
     end
 
     def escape(name)
-      name.gsub(/[^A-Za-z0-9_]/) { |char| format('-%02X', char.ord) }
+      name.gsub(/[^A-Za-z0-9_]/) { |char| format("-%02X", char.ord) }
     end
 
     def encode(path)
-      path.gsub(' ', '%20')
+      path.gsub(" ", "%20")
     end
   end
 end

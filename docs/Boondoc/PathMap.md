@@ -9,7 +9,7 @@ Maps objects to output files and anchors, and computes relative links.
 ### <a id="constant-TOP_LEVEL"></a>`TOP_LEVEL`
 
 ```ruby
-TOP_LEVEL = 'top-level.md'
+TOP_LEVEL = "top-level.md"
 ```
 
 ## Instance methods

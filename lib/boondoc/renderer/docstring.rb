@@ -4,11 +4,11 @@ module Boondoc
   module Renderer
     # Renders a docstring: callouts, body, then one section per kind of tag.
     class Docstring < Base
-      CALLOUTS = { 'deprecated' => 'Deprecated', 'abstract' => 'Abstract', 'note' => 'Note',
-                   'todo' => 'Todo' }.freeze
-      TYPED = { 'yieldparam' => 'Yield parameters', 'yieldreturn' => 'Yield returns',
-                'return' => 'Returns', 'raise' => 'Raises' }.freeze
-      META = { 'since' => 'Since', 'version' => 'Version', 'author' => 'Author', 'api' => 'API' }.freeze
+      CALLOUTS = { "deprecated" => "Deprecated", "abstract" => "Abstract", "note" => "Note",
+                   "todo" => "Todo" }.freeze
+      TYPED = { "yieldparam" => "Yield parameters", "yieldreturn" => "Yield returns",
+                "return" => "Returns", "raise" => "Raises" }.freeze
+      META = { "since" => "Since", "version" => "Version", "author" => "Author", "api" => "API" }.freeze
       HANDLED = (CALLOUTS.keys + TYPED.keys + META.keys +
                  %w[param option yield example see overload private attr attr_reader attr_writer]).freeze
 
@@ -44,7 +44,7 @@ module Boondoc
       def callouts(docstring)
         docstring.tags.select { |tag| CALLOUTS.key?(tag.tag_name) }.map do |tag|
           body = text(tag.text)
-          label = "**#{CALLOUTS[tag.tag_name]}#{':' unless body.empty?}** #{body}".strip
+          label = "**#{CALLOUTS[tag.tag_name]}#{":" unless body.empty?}** #{body}".strip
           label.lines.map { |line| "> #{line}".rstrip }.join("\n")
         end
       end
@@ -53,53 +53,53 @@ module Boondoc
         "**#{title}:**\n\n#{items.join("\n")}" unless items.empty?
       end
 
-      def item(lead, description, indent: '')
-        line = [lead, description].compact.reject(&:empty?).join(' — ')
+      def item(lead, description, indent: "")
+        line = [lead, description].compact.reject(&:empty?).join(" — ")
         "#{indent}- #{line.gsub("\n", "\n#{indent}  ")}"
       end
 
       def typed(tag)
         types = types(tag)
-        item([tag.name && code(tag.name), types && "(#{types})"].compact.join(' '), text(tag.text))
+        item([tag.name && code(tag.name), types && "(#{types})"].compact.join(" "), text(tag.text))
       end
 
       def parameters(docstring)
-        params = docstring.tags_named('param')
-        options = docstring.tags_named('option')
-        items = params.flat_map { |tag| [typed(tag), *option_items(options, tag.name, '  ')] }
-        [section('Parameters', items), *orphan_options(options, params.map(&:name))]
+        params = docstring.tags_named("param")
+        options = docstring.tags_named("option")
+        items = params.flat_map { |tag| [typed(tag), *option_items(options, tag.name, "  ")] }
+        [section("Parameters", items), *orphan_options(options, params.map(&:name))]
       end
 
       # Options whose hash is not itself documented with @param get their own section.
       def orphan_options(options, param_names)
         orphans = options.reject { |option| param_names.include?(option.name) }
         orphans.map(&:name).uniq.map do |name|
-          section("Options (#{code(name)})", option_items(orphans, name, ''))
+          section("Options (#{code(name)})", option_items(orphans, name, ""))
         end
       end
 
       def option_items(options, name, indent)
         options.select { |option| option.name == name }.map do |option|
           types = types(option)
-          lead = [code(option.key), types && "(#{types})"].compact.join(' ')
+          lead = [code(option.key), types && "(#{types})"].compact.join(" ")
           default = option.default && "(default: #{code(option.default)})"
-          item(lead, [text(option.text), default].compact.reject(&:empty?).join(' '), indent: indent)
+          item(lead, [text(option.text), default].compact.reject(&:empty?).join(" "), indent: indent)
         end
       end
 
       def yields(docstring)
-        items = docstring.tags_named('yield').map do |tag|
-          names = tag.types&.map { |name| code(name) }&.join(', ')
+        items = docstring.tags_named("yield").map do |tag|
+          names = tag.types&.map { |name| code(name) }&.join(", ")
           item(names && "(#{names})", text(tag.text))
         end
-        section('Yields', items)
+        section("Yields", items)
       end
 
       def examples(docstring)
-        tags = docstring.tags_named('example')
+        tags = docstring.tags_named("example")
         return nil if tags.empty?
 
-        ['**Examples:**', *tags.flat_map { |tag| [("*#{tag.name}*" unless tag.name.to_s.empty?), fenced(tag.text)] }]
+        ["**Examples:**", *tags.flat_map { |tag| [("*#{tag.name}*" unless tag.name.to_s.empty?), fenced(tag.text)] }]
       end
 
       def fenced(source)
@@ -107,7 +107,7 @@ module Boondoc
       end
 
       def see_also(docstring)
-        section('See also', docstring.tags_named('see').map { |tag| item(see_link(tag.name.to_s), text(tag.text)) })
+        section("See also", docstring.tags_named("see").map { |tag| item(see_link(tag.name.to_s), text(tag.text)) })
       end
 
       def see_link(name)
@@ -120,18 +120,18 @@ module Boondoc
       def meta(docstring)
         known = META.flat_map { |name, title| docstring.tags_named(name).map { |tag| [title, tag] } }
         other = docstring.tags.reject { |tag| HANDLED.include?(tag.tag_name) }
-                         .map { |tag| [tag.tag_name.tr('_', ' ').capitalize, tag] }
+          .map { |tag| [tag.tag_name.tr("_", " ").capitalize, tag] }
         items = (known + other).map { |title, tag| meta_item(title, tag) }
         items.join("\n") unless items.empty?
       end
 
       def meta_item(title, tag)
         types = types(tag)
-        "- **#{title}:** #{[types && "(#{types})", text(tag.text)].compact.join(' ')}".rstrip
+        "- **#{title}:** #{[types && "(#{types})", text(tag.text)].compact.join(" ")}".rstrip
       end
 
       def overloads(docstring)
-        docstring.tags_named('overload').flat_map do |tag|
+        docstring.tags_named("overload").flat_map do |tag|
           ["**Overload:**\n\n#{ruby("def #{tag.signature}")}", *render(tag.docstring)]
         end
       end

@@ -40,7 +40,7 @@ attr_reader :text
 
 | Method | Summary |
 | --- | --- |
-| [`#initialize(text = '', tags = [], directives = [])`](#method-i-initialize) |  |
+| [`#initialize(text = "", tags = [], directives = [])`](#method-i-initialize) |  |
 | [`#empty?`](#method-i-empty-3F) | Returns true when there is neither text nor tags |
 | [`#summary`](#method-i-summary) | Returns the first sentence of the first paragraph, on one line; |
 | [`#tag(name)`](#method-i-tag) | Returns the first tag with that name |
@@ -50,7 +50,7 @@ attr_reader :text
 ### <a id="method-i-initialize"></a>`#initialize`
 
 ```ruby
-def initialize(text = '', tags = [], directives = [])
+def initialize(text = "", tags = [], directives = [])
 ```
 
 **Parameters:**

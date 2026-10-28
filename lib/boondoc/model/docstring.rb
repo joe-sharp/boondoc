@@ -11,7 +11,7 @@ module Boondoc
                      keyword_init: true) do
       def initialize(**)
         super
-        self.text ||= ''
+        self.text ||= ""
       end
     end
 
@@ -27,7 +27,7 @@ module Boondoc
       # @param text [String]
       # @param tags [Array<Tag>]
       # @param directives [Array<String>]
-      def initialize(text = '', tags = [], directives = [])
+      def initialize(text = "", tags = [], directives = [])
         @text = text
         @tags = tags
         @directives = directives
@@ -59,11 +59,11 @@ module Boondoc
       # @return [String] the first sentence of the first paragraph, on one line;
       #   falls back to the `@return` description when there is no body
       def summary
-        paragraph = text.strip.split(/\n\s*\n/).first.to_s.gsub(/\s*\n\s*/, ' ')
+        paragraph = text.strip.split(/\n\s*\n/).first.to_s.gsub(/\s*\n\s*/, " ")
         return paragraph[/\A.*?[.!?](?=\s|\z)/] || paragraph unless paragraph.empty?
 
-        returned = tag('return')&.text.to_s.lines.first.to_s.strip
-        returned.empty? ? '' : "Returns #{returned}"
+        returned = tag("return")&.text.to_s.lines.first.to_s.strip
+        returned.empty? ? "" : "Returns #{returned}"
       end
     end
   end

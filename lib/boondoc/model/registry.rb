@@ -14,14 +14,14 @@ module Boondoc
       attr_reader :directive_sites
 
       def initialize
-        @root = NamespaceObject.new('', nil, kind: :root)
-        @objects = { '' => @root }
+        @root = NamespaceObject.new("", nil, kind: :root)
+        @objects = { "" => @root }
         @directive_sites = []
       end
 
       # @return [Array<String>] the files that contain YARD directives, in the order they were parsed
       def directive_files
-        @directive_sites.map { |site| site.rpartition(':').first }.uniq
+        @directive_sites.map { |site| site.rpartition(":").first }.uniq
       end
 
       # @param path [String]
@@ -119,7 +119,7 @@ module Boondoc
       end
 
       def constant_candidates(start, const)
-        return [const.delete_prefix('::')] if const.start_with?('::')
+        return [const.delete_prefix("::")] if const.start_with?("::")
 
         lexical(start).map { |scope| scope.root? ? const : "#{scope.path}::#{const}" }
       end
@@ -127,7 +127,7 @@ module Boondoc
       def find_method(namespace, sep, meth)
         return nil unless namespace.is_a?(NamespaceObject)
 
-        separators = { '' => %w[# .], '#' => ['#'] }.fetch(sep, ['.'])
+        separators = { "" => %w[# .], "#" => ["#"] }.fetch(sep, ["."])
         ancestors(namespace).each do |ancestor|
           separators.each do |separator|
             found = self["#{ancestor.path}#{separator}#{meth}"]

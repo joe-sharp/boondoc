@@ -7,8 +7,8 @@ module Boondoc
   # The previewer resolves links relative to the directory it was started in,
   # so it is always started from inside the output directory.
   class Preview
-    EXTENSION = 'yusukebe/gh-markdown-preview'
-    DEFAULT_HOST = '127.0.0.1'
+    EXTENSION = "yusukebe/gh-markdown-preview"
+    DEFAULT_HOST = "127.0.0.1"
     LOOPBACK_HOSTS = %w[::1 localhost].freeze
     SILENT = { out: File::NULL, err: File::NULL }.freeze
 
@@ -30,7 +30,7 @@ module Boondoc
     # @raise [Error] when the docs, the GitHub CLI, or the extension are missing
     def start
       raise Error, "#{@directory} does not exist; run `boondoc` first to generate the docs" unless docs?
-      raise Error, 'serve needs the GitHub CLI (gh); see https://cli.github.com' unless gh?
+      raise Error, "serve needs the GitHub CLI (gh); see https://cli.github.com" unless gh?
 
       install unless extension?
       warn_exposed unless loopback?
@@ -40,7 +40,7 @@ module Boondoc
     private
 
     def loopback?
-      LOOPBACK_HOSTS.include?(@host) || @host.start_with?('127.')
+      LOOPBACK_HOSTS.include?(@host) || @host.start_with?("127.")
     end
 
     # The extension answers `/__/md?path=` for any path, not only the docs, and
@@ -48,8 +48,8 @@ module Boondoc
     # every file the current user can.
     def warn_exposed
       warn "boondoc: serving on #{@host} exposes the preview to the network. gh markdown-preview will " \
-           'return any file the current user can read, not only the docs. Use the default 127.0.0.1 ' \
-           'unless everyone who can reach this machine is trusted.'
+           "return any file the current user can read, not only the docs. Use the default 127.0.0.1 " \
+           "unless everyone who can reach this machine is trusted."
     end
 
     def docs?
@@ -57,22 +57,22 @@ module Boondoc
     end
 
     def gh?
-      system('gh', '--version', **SILENT) == true
+      system("gh", "--version", **SILENT) == true
     end
 
     def extension?
-      system('gh', 'markdown-preview', '--version', **SILENT) == true
+      system("gh", "markdown-preview", "--version", **SILENT) == true
     end
 
     def install
       manual = "install it with `gh extension install #{EXTENSION}`"
       raise Error, "serve needs the gh markdown-preview extension; #{manual}" unless @confirm_install&.call
-      raise Error, "could not install the extension; #{manual}" unless system('gh', 'extension', 'install', EXTENSION)
+      raise Error, "could not install the extension; #{manual}" unless system("gh", "extension", "install", EXTENSION)
     end
 
     def serve
-      command = ['gh', 'markdown-preview', '--host', @host]
-      command.push('--port', @port.to_s) if @port
+      command = ["gh", "markdown-preview", "--host", @host]
+      command.push("--port", @port.to_s) if @port
       system(*command, chdir: @directory)
     rescue Interrupt
       nil

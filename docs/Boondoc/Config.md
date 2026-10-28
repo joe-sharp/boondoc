@@ -11,11 +11,11 @@ Options for one run, merged from defaults, `.yardopts`, `.boondoc.yml`, and the 
 ```ruby
 CHECKS = {
       list: [->(value) { value.is_a?(String) || (value.is_a?(Array) && value.all?(String)) },
-             'a string or a list of strings'],
-      string: [->(value) { value.is_a?(String) }, 'a string'],
-      optional_string: [->(value) { value.nil? || value.is_a?(String) }, 'a string'],
-      file_or_false: [->(value) { value.nil? || value == false || value.is_a?(String) }, 'a file name or false'],
-      boolean: [->(value) { [true, false].include?(value) }, 'true or false']
+             "a string or a list of strings"],
+      string: [->(value) { value.is_a?(String) }, "a string"],
+      optional_string: [->(value) { value.nil? || value.is_a?(String) }, "a string"],
+      file_or_false: [->(value) { value.nil? || value == false || value.is_a?(String) }, "a file name or false"],
+      boolean: [->(value) { [true, false].include?(value) }, "true or false"]
     }.freeze
 ```
 
@@ -25,7 +25,7 @@ A test and a description for each type name in [`TYPES`](#constant-TYPES).
 
 ```ruby
 DEFAULTS = {
-      sources: ['lib/**/*.rb'], exclude: [], output: 'docs', index: 'README.md',
+      sources: ["lib/**/*.rb"], exclude: [], output: "docs", index: "README.md",
       readme: nil, files: [], assets: [], copy_linked_assets: false, title: nil,
       private: false, protected: false, yard_macros: false,
       strict: false, force: false, quiet: false, allow_outside_output: false, yardopts: true
@@ -35,7 +35,7 @@ DEFAULTS = {
 ### <a id="constant-FILE"></a>`FILE`
 
 ```ruby
-FILE = '.boondoc.yml'
+FILE = ".boondoc.yml"
 ```
 
 ### <a id="constant-TYPES"></a>`TYPES`

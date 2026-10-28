@@ -23,7 +23,7 @@ module Boondoc
       # @param line [Integer]
       # @return [Boolean] true when the line carries a trailing `# :nodoc:`
       def nodoc?(line)
-        @trailing[line].to_s.include?(':nodoc:')
+        @trailing[line].to_s.include?(":nodoc:")
       end
 
       # @return [Array<Integer>] last lines of comment blocks that contain YARD directives
@@ -58,9 +58,9 @@ module Boondoc
       end
 
       def clean(lines)
-        lines = lines.grep_v(IGNORED).map { |line| line.delete_prefix('#').rstrip }
+        lines = lines.grep_v(IGNORED).map { |line| line.delete_prefix("#").rstrip }
         indent = lines.reject(&:empty?).map { |line| line[/\A */].size }.min || 0
-        lines.map { |line| line[indent..] || '' }.join("\n")
+        lines.map { |line| line[indent..] || "" }.join("\n")
       end
     end
   end

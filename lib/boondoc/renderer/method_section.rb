@@ -30,8 +30,8 @@ module Boondoc
         reader = accessors.find { |meth| meth.attribute == :reader }
         writer = accessors.find { |meth| meth.attribute == :writer }
         primary = reader || writer
-        name = primary.name.delete_suffix('=')
-        macro = reader && writer ? 'attr_accessor' : "attr_#{primary.attribute}"
+        name = primary.name.delete_suffix("=")
+        macro = (reader && writer) ? "attr_accessor" : "attr_#{primary.attribute}"
         [
           heading("#{primary.separator}#{name}", accessors),
           ruby("#{macro} :#{name}"),
@@ -43,8 +43,8 @@ module Boondoc
       # @param meth [Model::MethodObject]
       # @return [String] the method as it would be defined, such as `def self.build(name)`
       def signature(meth)
-        params = meth.parameters ? "(#{meth.parameters})" : ''
-        "def #{'self.' if meth.scope == :class}#{meth.name}#{params}"
+        params = meth.parameters ? "(#{meth.parameters})" : ""
+        "def #{"self." if meth.scope == :class}#{meth.name}#{params}"
       end
 
       private
@@ -64,7 +64,7 @@ module Boondoc
         lines << "- **Visibility:** #{meth.visibility}" unless meth.visibility == :public
         lines << "- **Alias for:** #{alias_link(meth)}" if meth.alias_for
         aliases = aliases_of(meth)
-        lines << "- **Also known as:** #{aliases.join(', ')}" unless aliases.empty?
+        lines << "- **Also known as:** #{aliases.join(", ")}" unless aliases.empty?
         lines.join("\n") unless lines.empty?
       end
 
@@ -77,7 +77,7 @@ module Boondoc
       def aliases_of(meth)
         aliases = context.aliases(meth.namespace, meth.scope).fetch(meth.name, [])
         aliases.select { |other| filter.visible?(other) }
-               .map { |other| linker.link(other, from: @from, label: code(other.display_name)) }
+          .map { |other| linker.link(other, from: @from, label: code(other.display_name)) }
       end
     end
   end

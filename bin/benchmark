@@ -29,24 +29,24 @@
 # A run that takes longer than 10 minutes is killed, and its tool is reported as a timeout
 # instead of a time.
 
-require 'fileutils'
-require 'open3'
-require 'optparse'
-require 'timeout'
-require 'tmpdir'
-require_relative '../lib/boondoc/version'
+require "fileutils"
+require "open3"
+require "optparse"
+require "timeout"
+require "tmpdir"
+require_relative "../lib/boondoc/version"
 
-ROOT = File.expand_path('..', __dir__)
-RUNS = Integer(ENV.fetch('RUNS', 11))
-abort 'RUNS must be at least 1' unless RUNS.positive?
+ROOT = File.expand_path("..", __dir__)
+RUNS = Integer(ENV.fetch("RUNS", 11))
+abort "RUNS must be at least 1" unless RUNS.positive?
 
 RUN_TIMEOUT = 600 # seconds; a tool whose run takes longer is killed and reported as a timeout
 TIMED_OUT = :timeout
-OUTPUT = 'out' # where each tool writes its docs, relative to the copied files
+OUTPUT = "out" # where each tool writes its docs, relative to the copied files
 RUBY = RbConfig.ruby
-RUBY_FILES = '**/*.rb'
-BOONDOC = [RUBY, "-I#{File.join(ROOT, 'lib')}", File.join(ROOT, 'exe', 'boondoc'),
-           '--quiet', '--skip-readme', '-o', OUTPUT].freeze
+RUBY_FILES = "**/*.rb"
+BOONDOC = [RUBY, "-I#{File.join(ROOT, "lib")}", File.join(ROOT, "exe", "boondoc"),
+           "--quiet", "--skip-readme", "-o", OUTPUT].freeze
 
 # Progress goes to stderr, and only with --verbose.
 def log(message, newline: true)
@@ -58,27 +58,27 @@ end
 # Two-character marks printed as each tool starts its timed run, so the rotation is visible while
 # it goes. A second character of + or - marks a variant of the first character's tool.
 TOOL_MARKS = {
-  'boondoc' => 'b.', 'boondoc `--yard-macros`' => 'b+', 'YARD' => 'y.',
-  'YARD + yard-markdown' => 'y+', 'YARD (parse only)' => 'y-', 'RDoc' => 'r.'
+  "boondoc" => "b.", "boondoc `--yard-macros`" => "b+", "YARD" => "y.",
+  "YARD + yard-markdown" => "y+", "YARD (parse only)" => "y-", "RDoc" => "r."
 }.freeze
 
 def log_key(tools)
-  log "Key: #{tools.keys.map { |label| "#{TOOL_MARKS.fetch(label)} #{label}" }.join(', ')}"
+  log "Key: #{tools.keys.map { |label| "#{TOOL_MARKS.fetch(label)} #{label}" }.join(", ")}"
 end
 
 def boondoc_tools
-  { 'boondoc' => [*BOONDOC, RUBY_FILES], 'boondoc `--yard-macros`' => [*BOONDOC, '--yard-macros', RUBY_FILES] }
+  { "boondoc" => [*BOONDOC, RUBY_FILES], "boondoc `--yard-macros`" => [*BOONDOC, "--yard-macros", RUBY_FILES] }
 end
 
 def comparison_tools
-  Gem::Specification.find_by_name('yard-markdown') # the plugin is found by yard, but check it early
-  yard = [RUBY, Gem.bin_path('yard', 'yard'), 'doc', '--quiet', '--no-save', '--no-cache',
-          '--no-stats', '--no-yardopts']
+  Gem::Specification.find_by_name("yard-markdown") # the plugin is found by yard, but check it early
+  yard = [RUBY, Gem.bin_path("yard", "yard"), "doc", "--quiet", "--no-save", "--no-cache",
+          "--no-stats", "--no-yardopts"]
   {
-    'YARD' => [*yard, '-o', OUTPUT, RUBY_FILES],
-    'YARD + yard-markdown' => [*yard, '--plugin', 'markdown', '--format=markdown', '-o', OUTPUT, RUBY_FILES],
-    'YARD (parse only)' => [*yard, '-n', RUBY_FILES],
-    'RDoc' => [RUBY, Gem.bin_path('rdoc', 'rdoc'), '--quiet', '-o', OUTPUT, '.']
+    "YARD" => [*yard, "-o", OUTPUT, RUBY_FILES],
+    "YARD + yard-markdown" => [*yard, "--plugin", "markdown", "--format=markdown", "-o", OUTPUT, RUBY_FILES],
+    "YARD (parse only)" => [*yard, "-n", RUBY_FILES],
+    "RDoc" => [RUBY, Gem.bin_path("rdoc", "rdoc"), "--quiet", "-o", OUTPUT, "."]
   }
 rescue Gem::LoadError => e
   abort "YARD, yard-markdown and RDoc must be installed (#{e.message})"
@@ -98,14 +98,14 @@ def run_once(command, dir, err = File::NULL)
 end
 
 def clear_output(dir)
-  FileUtils.rm_rf([File.join(dir, OUTPUT), File.join(dir, '.yardoc')])
+  FileUtils.rm_rf([File.join(dir, OUTPUT), File.join(dir, ".yardoc")])
 end
 
 # The exit status of the process, or nil after killing it when it outlives RUN_TIMEOUT.
 def wait_for(pid)
   Timeout.timeout(RUN_TIMEOUT) { Process.wait2(pid).last }
 rescue Timeout::Error
-  Process.kill('KILL', pid)
+  Process.kill("KILL", pid)
   Process.wait(pid)
   nil
 end
@@ -117,8 +117,8 @@ def check_tools(tools, dir)
 end
 
 def check_tool(label, command, dir)
-  Dir.mktmpdir('boondoc-check') do |tmp|
-    err = File.join(tmp, 'stderr')
+  Dir.mktmpdir("boondoc-check") do |tmp|
+    err = File.join(tmp, "stderr")
     elapsed, ok = run_once(command, dir, err)
     return TIMED_OUT if elapsed.nil?
 
@@ -153,13 +153,13 @@ def time_round(tools, dir, timed_out, round, times)
     elapsed = time_run(tools[label], dir)
     elapsed ? times[label] << elapsed : timed_out << label
   end
-  log ''
+  log ""
 end
 
 # Seconds for one timed run, or nil when it timed out. Aborts when the command fails.
 def time_run(command, dir)
   elapsed, ok = run_once(command, dir)
-  abort "failed: #{command.join(' ')}" if elapsed && !ok
+  abort "failed: #{command.join(" ")}" if elapsed && !ok
   elapsed
 end
 
@@ -175,28 +175,28 @@ def spread(times)
 end
 
 def timing_text(times, format_string)
-  times == TIMED_OUT ? 'timeout' : format(format_string, median(times))
+  (times == TIMED_OUT) ? "timeout" : format(format_string, median(times))
 end
 
 def with_commas(number)
-  number.to_s.reverse.scan(/\d{1,3}/).join(',').reverse
+  number.to_s.reverse.scan(/\d{1,3}/).join(",").reverse
 end
 
 # The Ruby files of a directory, relative to it: the tracked and new files of a git repository
 # (so ignored paths such as vendor/ are left out), or every file of an installed gem. Files in
 # hidden directories such as .github are left out too: boondoc, YARD and RDoc all skip them.
 def ruby_files(source)
-  files = if File.directory?(File.join(source, '.git'))
-            stdout, status = Open3.capture2('git', '-C', source, 'ls-files', '-z', '--cached', '--others',
-                                            '--exclude-standard', '--', '*.rb')
-            abort "git ls-files failed in #{source}" unless status.success?
+  files = if File.directory?(File.join(source, ".git"))
+    stdout, status = Open3.capture2("git", "-C", source, "ls-files", "-z", "--cached", "--others",
+                                    "--exclude-standard", "--", "*.rb")
+    abort "git ls-files failed in #{source}" unless status.success?
 
-            stdout.split("\0")
-          else
-            Dir.glob(RUBY_FILES, base: source)
-          end
+    stdout.split("\0")
+  else
+    Dir.glob(RUBY_FILES, base: source)
+  end
   files.reject do |file|
-    hidden = file.split('/').any? { |part| part.start_with?('.') }
+    hidden = file.split("/").any? { |part| part.start_with?(".") }
     hidden || File.symlink?(File.join(source, file)) || !File.file?(File.join(source, file))
   end.sort
 end
@@ -206,7 +206,7 @@ def measure(source, tools)
   files = ruby_files(source)
   abort "no Ruby files in #{source}" if files.empty?
 
-  Dir.mktmpdir('boondoc-benchmark') do |dir|
+  Dir.mktmpdir("boondoc-benchmark") do |dir|
     copy_files(source, files, dir)
     lines = files.sum { |file| File.foreach(File.join(dir, file)).count }
     timed_out = check_tools(tools, dir)
@@ -226,19 +226,19 @@ def versions
   names = %w[yard yard-markdown rdoc rubocop prism]
   tools = ["boondoc #{Boondoc::VERSION} (#{codebase_label(ROOT)})",
            *names.map { |name| "#{name} #{Gem::Specification.find_by_name(name).version}" }]
-  "#{RUBY_DESCRIPTION}; #{tools.join(', ')}"
+  "#{RUBY_DESCRIPTION}; #{tools.join(", ")}"
 end
 
 # The directory's name, with the commit when it is a git repository, so a row says which code it timed.
 # A "-dirty" suffix means .rb files were changed or added since that commit, and they were timed too.
 def codebase_label(dir)
   name = File.basename(File.expand_path(dir))
-  return name unless File.directory?(File.join(dir, '.git'))
+  return name unless File.directory?(File.join(dir, ".git"))
 
-  sha, status = Open3.capture2('git', '-C', dir, 'rev-parse', '--short', 'HEAD')
+  sha, status = Open3.capture2("git", "-C", dir, "rev-parse", "--short", "HEAD")
   return name unless status.success?
 
-  changed, = Open3.capture2('git', '-C', dir, 'status', '--porcelain', '--', '*.rb')
+  changed, = Open3.capture2("git", "-C", dir, "status", "--porcelain", "--", "*.rb")
   label = "#{name} #{sha.strip}"
   changed.strip.empty? ? label : "#{label}-dirty"
 end
@@ -246,7 +246,7 @@ end
 def docs_codebases(dirs)
   return dirs.to_h { |dir| [codebase_label(dir), File.expand_path(dir)] } unless dirs.empty?
 
-  codebases = { 'boondoc' => ROOT }
+  codebases = { "boondoc" => ROOT }
   %w[yard rdoc rubocop].each do |name|
     spec = Gem::Specification.find_by_name(name)
     codebases["#{name} #{spec.version}"] = spec.gem_dir
@@ -256,7 +256,7 @@ end
 
 def project_summary(compare, source, boondoc_only: false)
   tools = boondoc_tools.merge(compare ? comparison_tools : {})
-  tools = tools.slice('boondoc') if boondoc_only
+  tools = tools.slice("boondoc") if boondoc_only
   log_key(tools)
   result = measure(source, tools)
   puts "#{codebase_label(source)}: #{result[:files]} Ruby files, #{with_commas(result[:lines])} lines, " \
@@ -265,22 +265,22 @@ def project_summary(compare, source, boondoc_only: false)
 end
 
 def timing_line(label, times)
-  return format('  %-26s timeout (a run took over %d minutes)', label, RUN_TIMEOUT / 60) if times == TIMED_OUT
+  return format("  %-26s timeout (a run took over %d minutes)", label, RUN_TIMEOUT / 60) if times == TIMED_OUT
 
-  format('  %-26s median %.2fs  min %.2fs  max %.2fs  ±%d%%',
+  format("  %-26s median %.2fs  min %.2fs  max %.2fs  ±%d%%",
          label, median(times), times.first, times.last, spread(times).round)
 end
 
 def docs_header(tools)
-  header = ['Codebase', 'Ruby files', 'Lines', *tools.keys]
-  puts "Seconds, median of #{RUNS} runs; timeout if a run takes over #{RUN_TIMEOUT / 60} minutes. #{versions}", ''
-  puts "| #{header.join(' | ')} |"
-  puts "| --- |#{' ---: |' * (header.size - 1)}"
+  header = ["Codebase", "Ruby files", "Lines", *tools.keys]
+  puts "Seconds, median of #{RUNS} runs; timeout if a run takes over #{RUN_TIMEOUT / 60} minutes. #{versions}", ""
+  puts "| #{header.join(" | ")} |"
+  puts "| --- |#{" ---: |" * (header.size - 1)}"
 end
 
 def docs_row(name, result)
-  timings = result[:timings].values.map { |times| timing_text(times, '%.2f') }
-  "| #{[name, result[:files], with_commas(result[:lines]), *timings].join(' | ')} |"
+  timings = result[:timings].values.map { |times| timing_text(times, "%.2f") }
+  "| #{[name, result[:files], with_commas(result[:lines]), *timings].join(" | ")} |"
 end
 
 def docs_table(dirs)
@@ -290,7 +290,7 @@ def docs_table(dirs)
   log_key(tools)
   docs_header(tools)
   widest = codebases.filter_map { |name, source| docs_codebase(name, source, tools) }.max_by(&:first)
-  puts '', "Each run was within ±#{widest.first}% of its tool's median (widest: #{widest.last})." if widest
+  puts "", "Each run was within ±#{widest.first}% of its tool's median (widest: #{widest.last})." if widest
 end
 
 # Prints the codebase's row, and returns [percent, "tool on codebase"] for its run furthest from the median.
@@ -299,22 +299,22 @@ def docs_codebase(name, source, tools)
   result = measure(source, tools)
   puts docs_row(name, result)
   result[:timings].reject { |_, times| times == TIMED_OUT }
-                  .map { |label, times| [spread(times).round, "#{label} on #{name}"] }.max_by(&:first)
+    .map { |label, times| [spread(times).round, "#{label} on #{name}"] }.max_by(&:first)
 end
 
 options = { compare: false, for_docs: false, verbose: false, boondoc_only: false }
 OptionParser.new do |opts|
-  opts.banner = 'usage: bin/benchmark [DIR] [--compare] | bin/benchmark --for-docs [DIR ...]'
-  opts.on('--compare', 'Also time YARD, YARD with yard-markdown, and RDoc on the directory') do
+  opts.banner = "usage: bin/benchmark [DIR] [--compare] | bin/benchmark --for-docs [DIR ...]"
+  opts.on("--compare", "Also time YARD, YARD with yard-markdown, and RDoc on the directory") do
     options[:compare] = true
   end
-  opts.on('--boondoc-only', 'Time only boondoc, without --yard-macros') { options[:boondoc_only] = true }
-  opts.on('--for-docs', 'Print the performance table (implies --compare)') { options[:for_docs] = true }
-  opts.on('--verbose', 'Print progress to stderr: a key, then a mark per timed run') { options[:verbose] = true }
+  opts.on("--boondoc-only", "Time only boondoc, without --yard-macros") { options[:boondoc_only] = true }
+  opts.on("--for-docs", "Print the performance table (implies --compare)") { options[:for_docs] = true }
+  opts.on("--verbose", "Print progress to stderr: a key, then a mark per timed run") { options[:verbose] = true }
 end.parse!
-abort 'pass one DIR, or several with --for-docs' if ARGV.size > 1 && !options[:for_docs]
+abort "pass one DIR, or several with --for-docs" if ARGV.size > 1 && !options[:for_docs]
 if options[:boondoc_only] && (options[:compare] || options[:for_docs])
-  abort '--boondoc-only cannot be combined with --compare or --for-docs'
+  abort "--boondoc-only cannot be combined with --compare or --for-docs"
 end
 @verbose = options[:verbose]
 

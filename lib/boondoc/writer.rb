@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'fileutils'
+require "fileutils"
 
 module Boondoc
   # Writes generated pages and removes pages left over from earlier runs.
@@ -9,7 +9,7 @@ module Boondoc
   # own files are ever deleted or silently overwritten. A page whose content has
   # not changed is not written again.
   class Writer
-    MANIFEST = '.boondoc-manifest'
+    MANIFEST = ".boondoc-manifest"
 
     # @param output_dir [String] absolute path of the output directory
     # @param reporter [Reporter]
@@ -84,10 +84,10 @@ module Boondoc
     #   outside the output directory
     def unsafe(path)
       full = File.expand_path(path, @output_dir)
-      return "it is outside #{@output_dir}" unless full.start_with?(File.join(@output_dir, ''))
+      return "it is outside #{@output_dir}" unless full.start_with?(File.join(@output_dir, ""))
 
       # The symlink check below resolves `..` by name, but the file system follows a symlink first.
-      return 'it contains `..`' if path.split('/').include?('..')
+      return "it contains `..`" if path.split("/").include?("..")
 
       link = Containment.symlink_between(full, @output_dir)
       "#{link} is a symlink" if link
@@ -103,8 +103,8 @@ module Boondoc
       return if conflicts.empty?
 
       raise Error, "refusing to overwrite #{conflicts.size} file(s) that boondoc did not generate " \
-                   "(#{conflicts.first(5).join(', ')}#{', ...' if conflicts.size > 5}). " \
-                   'Use --force to overwrite, or choose another --output directory.'
+                   "(#{conflicts.first(5).join(", ")}#{", ..." if conflicts.size > 5}). " \
+                   "Use --force to overwrite, or choose another --output directory."
     end
 
     # True when a case-insensitive filesystem maps the path onto a page Boondoc wrote before.
@@ -120,8 +120,8 @@ module Boondoc
       paths.group_by(&:downcase).each_value do |group|
         next if group.size == 1
 
-        @reporter.warn("#{group.sort.join(' and ')} differ only by case and will collide on case-insensitive " \
-                       'filesystems; rename one of them')
+        @reporter.warn("#{group.sort.join(" and ")} differ only by case and will collide on case-insensitive " \
+                       "filesystems; rename one of them")
       end
     end
 

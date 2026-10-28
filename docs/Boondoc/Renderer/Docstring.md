@@ -10,8 +10,8 @@ Renders a docstring: callouts, body, then one section per kind of tag.
 ### <a id="constant-CALLOUTS"></a>`CALLOUTS`
 
 ```ruby
-CALLOUTS = { 'deprecated' => 'Deprecated', 'abstract' => 'Abstract', 'note' => 'Note',
-                   'todo' => 'Todo' }.freeze
+CALLOUTS = { "deprecated" => "Deprecated", "abstract" => "Abstract", "note" => "Note",
+                   "todo" => "Todo" }.freeze
 ```
 
 ### <a id="constant-HANDLED"></a>`HANDLED`
@@ -24,14 +24,14 @@ HANDLED = (CALLOUTS.keys + TYPED.keys + META.keys +
 ### <a id="constant-META"></a>`META`
 
 ```ruby
-META = { 'since' => 'Since', 'version' => 'Version', 'author' => 'Author', 'api' => 'API' }.freeze
+META = { "since" => "Since", "version" => "Version", "author" => "Author", "api" => "API" }.freeze
 ```
 
 ### <a id="constant-TYPED"></a>`TYPED`
 
 ```ruby
-TYPED = { 'yieldparam' => 'Yield parameters', 'yieldreturn' => 'Yield returns',
-                'return' => 'Returns', 'raise' => 'Raises' }.freeze
+TYPED = { "yieldparam" => "Yield parameters", "yieldreturn" => "Yield returns",
+                "return" => "Returns", "raise" => "Raises" }.freeze
 ```
 
 ## Instance methods

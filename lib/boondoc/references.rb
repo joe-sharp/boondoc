@@ -22,7 +22,7 @@ module Boondoc
     # Targets are expanded before they are copied, so chains such as
     # `(see B)` -> `(see C)` work in any order. A cycle stops at the object
     # already being expanded.
-    def expand_object(object) # rubocop:disable Metrics/MethodLength
+    def expand_object(object)
       return if @visited.key?(object)
 
       @visited[object] = true

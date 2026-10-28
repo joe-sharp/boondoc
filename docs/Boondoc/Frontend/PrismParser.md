@@ -9,7 +9,7 @@ Parses Ruby files with Prism and fills a [`Model::Registry`](../Model/Registry.m
 | Method | Summary |
 | --- | --- |
 | [`#initialize(registry, reporter)`](#method-i-initialize) |  |
-| [`#parse(source, label = '(source)')`](#method-i-parse) |  |
+| [`#parse(source, label = "(source)")`](#method-i-parse) |  |
 | [`#parse_file(path, label: path)`](#method-i-parse_file) |  |
 
 ### <a id="method-i-initialize"></a>`#initialize`
@@ -26,7 +26,7 @@ def initialize(registry, reporter)
 ### <a id="method-i-parse"></a>`#parse`
 
 ```ruby
-def parse(source, label = '(source)')
+def parse(source, label = "(source)")
 ```
 
 **Parameters:**

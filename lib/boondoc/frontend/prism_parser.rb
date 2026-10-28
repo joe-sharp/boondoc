@@ -21,7 +21,7 @@ module Boondoc
       # @param source [String] Ruby source
       # @param label [String] file name to record on objects
       # @return [void]
-      def parse(source, label = '(source)')
+      def parse(source, label = "(source)")
         result = ::Prism.parse(source)
         return syntax_error(label, result) if result.failure?
 

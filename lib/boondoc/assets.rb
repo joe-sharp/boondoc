@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require 'pathname'
+require "pathname"
 
 module Boondoc
   # The files that are copied into the output directory next to the pages: images, video, PDFs,
@@ -53,7 +53,7 @@ module Boondoc
     private
 
     def add(map, entry)
-      from, directory = entry.split(':', 2)
+      from, directory = entry.split(":", 2)
       Dir.glob(from, base: @config.root).each do |match|
         sources(match).each do |source, within|
           output = directory ? output_path(directory, within) : source
@@ -73,19 +73,19 @@ module Boondoc
       raise Error, "#{match} is outside the project (#{@config.root})" unless Containment.inside?(full, @config.root)
       return [[relative(full), File.basename(full)]] if File.file?(full)
 
-      Dir.glob('**/*', base: full).select { |path| named_file?(File.join(full, path)) }
-         .map { |path| [relative(File.join(full, path)), path] }
+      Dir.glob("**/*", base: full).select { |path| named_file?(File.join(full, path)) }
+        .map { |path| [relative(File.join(full, path)), path] }
     end
 
     def named_file?(full)
-      inside = full.delete_prefix(File.join(@config.root, ''))
-      File.file?(full) && inside.split('/').none? { |part| part.start_with?('.') } &&
-        Containment.inside?(full, @config.root) && !full.start_with?(File.join(@config.output_dir, ''))
+      inside = full.delete_prefix(File.join(@config.root, ""))
+      File.file?(full) && inside.split("/").none? { |part| part.start_with?(".") } &&
+        Containment.inside?(full, @config.root) && !full.start_with?(File.join(@config.output_dir, ""))
     end
 
     def output_path(directory, within)
       path = Pathname.new(File.join(directory, within)).cleanpath.to_s
-      raise Error, "asset destination #{directory} is outside the output directory" if path.start_with?('..', '/')
+      raise Error, "asset destination #{directory} is outside the output directory" if path.start_with?("..", "/")
 
       path
     end
@@ -96,7 +96,7 @@ module Boondoc
 
     # Remembers an embedded file that is worth copying and returns where it goes.
     def link(absolute)
-      root = File.join(@config.root, '')
+      root = File.join(@config.root, "")
       return nil unless absolute.start_with?(root) && copyable?(absolute)
 
       output = absolute.delete_prefix(root)
@@ -106,7 +106,7 @@ module Boondoc
 
     def copyable?(absolute)
       File.file?(absolute) && !Stitcher::MARKDOWN.match?(absolute) &&
-        !absolute.start_with?(File.join(@config.output_dir, '')) && Containment.inside?(absolute, @config.root)
+        !absolute.start_with?(File.join(@config.output_dir, "")) && Containment.inside?(absolute, @config.root)
     end
   end
 end

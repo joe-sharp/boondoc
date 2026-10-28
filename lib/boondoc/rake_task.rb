@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require 'rake'
-require 'rake/tasklib'
-require 'boondoc'
+require "rake"
+require "rake/tasklib"
+require "boondoc"
 
 module Boondoc
   # Defines a Rake task that generates the documentation.
@@ -32,7 +32,7 @@ module Boondoc
     private
 
     def define
-      desc 'Generate markdown documentation with boondoc'
+      desc "Generate markdown documentation with boondoc"
       task(name) { Generator.new(Config.load(options)).run }
     end
   end

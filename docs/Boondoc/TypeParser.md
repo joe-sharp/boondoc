@@ -9,7 +9,7 @@ Splits a YARD type list such as `[String, Hash{Symbol => Array<Integer>}]`.
 ### <a id="constant-OPENERS"></a>`OPENERS`
 
 ```ruby
-OPENERS = { '[' => ']', '<' => '>', '(' => ')', '{' => '}' }.freeze
+OPENERS = { "[" => "]", "<" => ">", "(" => ")", "{" => "}" }.freeze
 ```
 
 ### <a id="constant-OPERATOR_DUCK_TYPE"></a>`OPERATOR_DUCK_TYPE`

@@ -64,5 +64,5 @@ fixed list, because what happens to be loaded in boondoc's own process
 ### <a id="constant-VERSION"></a>`VERSION`
 
 ```ruby
-VERSION = '0.1.0'
+VERSION = "0.1.0"
 ```

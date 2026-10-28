@@ -11,20 +11,20 @@
 #   bin/benchmark_status
 #   RUNS=5 bin/benchmark_status
 
-require 'fileutils'
-require 'open3'
+require "fileutils"
+require "open3"
 
-ROOT = File.expand_path('..', __dir__)
-PERFORMANCE = File.join(ROOT, 'docs', 'Performance.md')
-STATUS = File.join(ROOT, 'tmp', 'benchmark_status.txt')
+ROOT = File.expand_path("..", __dir__)
+PERFORMANCE = File.join(ROOT, "docs", "Performance.md")
+STATUS = File.join(ROOT, "tmp", "benchmark_status.txt")
 TOLERANCE = 0.10 # seconds above the table's time that still counts as green
-ROW = 'boondoc'
-COLUMN = 'Boondoc'
+ROW = "boondoc"
+COLUMN = "Boondoc"
 
 # The header and body rows of the table in docs/Performance.md.
 def table
   rows = File.read(PERFORMANCE).lines.grep(/^\|/).map do |line|
-    line.strip.delete_prefix('|').delete_suffix('|').split('|').map { |cell| cell.strip.delete('`') }
+    line.strip.delete_prefix("|").delete_suffix("|").split("|").map { |cell| cell.strip.delete("`") }
   end
   header, _rule, *body = rows
   [header, body]
@@ -40,19 +40,19 @@ def baseline
 end
 
 def median
-  stdout, stderr, status = Open3.capture3({ 'RUNS' => ENV.fetch('RUNS', '5') },
-                                          File.join(ROOT, 'bin', 'benchmark'), '--boondoc-only')
+  stdout, stderr, status = Open3.capture3({ "RUNS" => ENV.fetch("RUNS", "5") },
+                                          File.join(ROOT, "bin", "benchmark"), "--boondoc-only")
   raise "bin/benchmark failed: #{stderr.lines.last.to_s.strip}" unless status.success?
 
-  stdout[/median ([\d.]+)s/, 1]&.to_f or raise 'no median in the bin/benchmark output'
+  stdout[/median ([\d.]+)s/, 1]&.to_f or raise "no median in the bin/benchmark output"
 end
 
 def status_line
   expected = baseline
   actual = median
-  format('%<state>s %<actual>.2f %<expected>.2f',
-         state: actual <= expected + TOLERANCE ? 'ok' : 'slow', actual: actual, expected: expected)
-rescue StandardError => e
+  format("%<state>s %<actual>.2f %<expected>.2f",
+         state: (actual <= expected + TOLERANCE) ? "ok" : "slow", actual: actual, expected: expected)
+rescue => e
   "error #{e.message}"
 end
 
@@ -60,4 +60,4 @@ line = status_line
 FileUtils.mkdir_p(File.dirname(STATUS))
 File.write(STATUS, "#{line}\n")
 state, actual, expected = line.split
-puts state == 'error' ? line : "#{state} (median #{actual}s, baseline #{expected}s)"
+puts (state == "error") ? line : "#{state} (median #{actual}s, baseline #{expected}s)"
