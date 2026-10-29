@@ -132,7 +132,7 @@ GEM
       regexp_parser (>= 2.0)
       rubocop (~> 1.86, >= 1.86.2)
     ruby-progressbar (1.13.0)
-    sharp_style_rubocop (0.1.0)
+    sharp_style_rubocop (0.1.1)
       rubocop (~> 1.92)
       rubocop-performance (~> 1.20)
       rubocop-rspec (~> 3.0)
@@ -225,7 +225,7 @@ CHECKSUMS
   rubocop-performance (1.27.0) sha256=eeeb1374d062a368ee1c787b70eb0b0cc4b184cb1f8565f424760946146d61ce
   rubocop-rspec (3.10.2) sha256=0b3e2ecc592cd10ecbf0095bb58d1e357905276e069643523cc19eb7495f65e2
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
-  sharp_style_rubocop (0.1.0) sha256=76b283c707eeda081e228ca3341eaa1c90d70c769360aca4e03d08cef0917592
+  sharp_style_rubocop (0.1.1) sha256=52bd1ba8879411a36401e8ca010731000016186b820afd9f05f8025c3951bb0b
   shellany (0.0.1) sha256=0e127a9132698766d7e752e82cdac8250b6adbd09e6c0a7fbbb6f61964fedee7
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
   simplecov-html (0.13.2) sha256=bd0b8e54e7c2d7685927e8d6286466359b6f16b18cb0df47b508e8d73c777246
