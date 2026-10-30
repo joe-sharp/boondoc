@@ -93,8 +93,13 @@ module Boondoc
 
     def build_method(yard_object, name, namespace)
       attribute = (name.end_with?("=") ? :writer : :reader) if yard_object.is_attribute?
-      Model::MethodObject.new(name, namespace, scope: yard_object.scope, attribute: attribute,
-                                               parameters: parameters(yard_object))
+      Model::MethodObject.new(
+        name,
+        namespace,
+        scope: yard_object.scope,
+        attribute: attribute,
+        parameters: parameters(yard_object)
+      )
     end
 
     def parameters(yard_object)

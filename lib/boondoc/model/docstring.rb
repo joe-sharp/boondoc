@@ -7,8 +7,17 @@ module Boondoc
     # Which fields are set depends on the tag: `@param` uses `name`, `types` and
     # `text`; `@example` uses `name` as its title; `@option` adds `key` and
     # `default`; `@overload` carries a `signature` and a nested `docstring`.
-    Tag = Struct.new(:tag_name, :name, :types, :text, :key, :default, :signature, :docstring,
-                     keyword_init: true) do
+    Tag = Struct.new(
+      :tag_name,
+      :name,
+      :types,
+      :text,
+      :key,
+      :default,
+      :signature,
+      :docstring,
+      keyword_init: true
+    ) do
       def initialize(**)
         super
         self.text ||= ""

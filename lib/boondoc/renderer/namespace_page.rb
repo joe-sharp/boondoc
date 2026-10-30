@@ -26,11 +26,13 @@ module Boondoc
 
       # @return [String] the whole page
       def render
-        document([
-          "# #{title}", facts, Docstring.new(context, @namespace, @from).render(@namespace.docstring),
-          namespaces, constants, attributes,
-          SCOPES.keys.map { |scope| method_sections(scope) }, inherited_methods
-        ])
+        document(
+          [
+            "# #{title}", facts, Docstring.new(context, @namespace, @from).render(@namespace.docstring),
+            namespaces, constants, attributes,
+            SCOPES.keys.map { |scope| method_sections(scope) }, inherited_methods
+          ]
+        )
       end
 
       private

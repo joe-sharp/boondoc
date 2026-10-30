@@ -25,14 +25,14 @@ module Boondoc
       super()
       @name = name
       @options = {}
-      yield self if block_given?
+      yield(self) if block_given?
       define
     end
 
     private
 
     def define
-      desc "Generate markdown documentation with boondoc"
+      desc("Generate markdown documentation with boondoc")
       task(name) { Generator.new(Config.load(options)).run }
     end
   end
