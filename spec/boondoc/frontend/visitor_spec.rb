@@ -67,8 +67,14 @@ RSpec.describe Boondoc::Frontend::Visitor do
     RUBY
     visibility = registry.grep(Boondoc::Model::MethodObject).to_h { |meth| [meth.path, meth.visibility] }
     expect(visibility).to eq(
-      "Foo#a" => :private, "Foo#b" => :public, "Foo.c" => :private, "Foo.d" => :public,
-      "Foo#e" => :private, "Foo#f" => :protected, "Foo#g" => :public, "Foo.h" => :private,
+      "Foo#a" => :private,
+      "Foo#b" => :public,
+      "Foo.c" => :private,
+      "Foo.d" => :public,
+      "Foo#e" => :private,
+      "Foo#f" => :protected,
+      "Foo#g" => :public,
+      "Foo.h" => :private,
       "Foo.i" => :private
     )
   end

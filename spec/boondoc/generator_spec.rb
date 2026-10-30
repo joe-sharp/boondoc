@@ -133,8 +133,10 @@ RSpec.describe Boondoc::Generator do
     context "with images in the README and in doc comments" do
       def write_project(dir)
         File.write(File.join(dir, "README.md"), "# Demo\n\n![logo](images/logo.png)\n\n[see](lib/demo.rb)\n")
-        File.write(File.join(dir, "lib", "demo.rb"),
-                   "# Doc: ![d](images/logo.png) and [l](images/logo.png)\nclass Demo; end\n")
+        File.write(
+          File.join(dir, "lib", "demo.rb"),
+          "# Doc: ![d](images/logo.png) and [l](images/logo.png)\nclass Demo; end\n"
+        )
         FileUtils.mkdir_p(File.join(dir, "images"))
         File.binwrite(File.join(dir, "images", "logo.png"), "\x89PNG".b)
       end

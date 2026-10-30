@@ -29,8 +29,13 @@ RSpec.describe Boondoc::DocstringParser do
 
   it "parses @option with a key and default" do
     tag = parse("@option opts [Integer] :retries (3) how many times").tag("option")
-    expect(tag.to_h).to include(name: "opts", key: ":retries", default: "3", types: ["Integer"],
-                                text: "how many times")
+    expect(tag.to_h).to include(
+      name: "opts",
+      key: ":retries",
+      default: "3",
+      types: ["Integer"],
+      text: "how many times"
+    )
   end
 
   it "parses @example with a title and dedented code", :aggregate_failures do
