@@ -187,8 +187,18 @@ end
 # hidden directories such as .github are left out too: boondoc, YARD and RDoc all skip them.
 def ruby_files(source)
   files = if File.directory?(File.join(source, ".git"))
-    stdout, status = Open3.capture2("git", "-C", source, "ls-files", "-z", "--cached", "--others",
-                                    "--exclude-standard", "--", "*.rb")
+    stdout, status = Open3.capture2(
+      "git",
+      "-C",
+      source,
+      "ls-files",
+      "-z",
+      "--cached",
+      "--others",
+      "--exclude-standard",
+      "--",
+      "*.rb"
+    )
     abort "git ls-files failed in #{source}" unless status.success?
 
     stdout.split("\0")
@@ -235,10 +245,25 @@ def codebase_label(dir)
   name = File.basename(File.expand_path(dir))
   return name unless File.directory?(File.join(dir, ".git"))
 
-  sha, status = Open3.capture2("git", "-C", dir, "rev-parse", "--short", "HEAD")
+  sha, status = Open3.capture2(
+    "git",
+    "-C",
+    dir,
+    "rev-parse",
+    "--short",
+    "HEAD"
+  )
   return name unless status.success?
 
-  changed, = Open3.capture2("git", "-C", dir, "status", "--porcelain", "--", "*.rb")
+  changed, = Open3.capture2(
+    "git",
+    "-C",
+    dir,
+    "status",
+    "--porcelain",
+    "--",
+    "*.rb"
+  )
   label = "#{name} #{sha.strip}"
   changed.strip.empty? ? label : "#{label}-dirty"
 end
@@ -267,8 +292,11 @@ end
 def timing_line(label, times)
   return format("  %-26s timeout (a run took over %d minutes)", label, RUN_TIMEOUT / 60) if times == TIMED_OUT
 
-  format("  %-26s median %.2fs  min %.2fs  max %.2fs  ±%d%%",
-         label, median(times), times.first, times.last, spread(times).round)
+  # rubocop:disable-next Layout/MultilineMethodArgumentLineBreaks
+  format(
+    "  %-26s median %.2fs  min %.2fs  max %.2fs  ±%d%%",
+    label, median(times), times.first, times.last, spread(times).round
+  )
 end
 
 def docs_header(tools)

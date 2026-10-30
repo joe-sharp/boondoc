@@ -40,8 +40,11 @@ def baseline
 end
 
 def median
-  stdout, stderr, status = Open3.capture3({ "RUNS" => ENV.fetch("RUNS", "5") },
-                                          File.join(ROOT, "bin", "benchmark"), "--boondoc-only")
+  stdout, stderr, status = Open3.capture3(
+    { "RUNS" => ENV.fetch("RUNS", "5") },
+    File.join(ROOT, "bin", "benchmark"),
+    "--boondoc-only"
+  )
   raise "bin/benchmark failed: #{stderr.lines.last.to_s.strip}" unless status.success?
 
   stdout[/median ([\d.]+)s/, 1]&.to_f or raise "no median in the bin/benchmark output"
@@ -50,8 +53,12 @@ end
 def status_line
   expected = baseline
   actual = median
-  format("%<state>s %<actual>.2f %<expected>.2f",
-         state: (actual <= expected + TOLERANCE) ? "ok" : "slow", actual: actual, expected: expected)
+  format(
+    "%<state>s %<actual>.2f %<expected>.2f",
+    state: (actual <= expected + TOLERANCE) ? "ok" : "slow",
+    actual: actual,
+    expected: expected
+  )
 rescue => e
   "error #{e.message}"
 end

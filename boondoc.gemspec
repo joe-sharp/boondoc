@@ -26,14 +26,16 @@ Gem::Specification.new do |spec|
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
   spec.files = IO.popen(%w[git ls-files -z], chdir: __dir__, err: IO::NULL) do |ls|
     ls.readlines("\x0", chomp: true).select do |f|
-      f.start_with?(*%w[
-        lib/
-        exe/
-        CHANGELOG.md
-        CODE_OF_CONDUCT.md
-        README.md
-        LICENSE.txt
-      ])
+      f.start_with?(
+        *%w[
+          lib/
+          exe/
+          CHANGELOG.md
+          CODE_OF_CONDUCT.md
+          README.md
+          LICENSE.txt
+        ]
+      )
     end
   end
   spec.bindir = "exe"
