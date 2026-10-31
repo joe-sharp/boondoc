@@ -23,11 +23,18 @@ Boondoc::Yardopts.parse('--title Foo -o doc lib - CHANGELOG.md').settings
 
 ```ruby
 ARGUMENT_OPTIONS = %w[
-      --load --plugin --db --exclude --api --no-api --hide-api --default-return --query --title
-      --readme --main --files --asset --output-dir --markup --markup-provider --charset --template
-      --template-path --format --locale --po-dir --tag --type-tag --type-name-tag --name-tag
-      --title-tag --hide-tag --transitive-tag --non-transitive-tag
-    ].freeze
+      --load
+      --plugin
+      --db
+      --exclude
+      --api
+      --no-api
+      --hide-api
+      --default-return
+      --query
+      --title
+      --readme
+# ... (21 more lines)
 ```
 
 Long options of the yard gem that take an argument.

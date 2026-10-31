@@ -43,18 +43,18 @@ the pipeline and [`Boondoc::CLI`](Boondoc/CLI.md) for the command line.
 
 ```ruby
 CORE_CONSTANTS = %w[
-    ArgumentError Array BasicObject Binding Class ClosedQueueError Comparable Complex ConditionVariable Data
-    Dir EOFError Encoding EncodingError Enumerable Enumerator Errno Exception FalseClass Fiber FiberError File
-    FileTest Float FloatDomainError FrozenError GC Hash IO IOError IndexError Integer Interrupt Kernel KeyError
-    LoadError LocalJumpError Marshal MatchData Math Method Module Mutex NameError NilClass NoMatchingPatternError
-    NoMatchingPatternKeyError NoMemoryError NoMethodError NotImplementedError Numeric Object ObjectSpace Pathname
-    Proc Process Queue Ractor Random Range RangeError Rational Refinement Regexp RegexpError Ruby RubyVM
-    RuntimeError ScriptError SecurityError Set Signal SignalException SizedQueue StandardError StopIteration String
-    Struct Symbol SyntaxError SystemCallError SystemExit SystemStackError Thread ThreadError ThreadGroup Time
-    TracePoint TrueClass TypeError UnboundMethod UncaughtThrowError Warning ZeroDivisionError
-    Base64 Benchmark BigDecimal CGI CSV Coverage DRb Date DateTime Delegator Digest ERB Etc Fcntl Fiddle FileUtils
-    Find Forwardable GetoptLong IPAddr IPSocket JSON Logger Monitor MonitorMixin Net Observable Open3 OpenSSL
-# ... (4 more lines)
+    ArgumentError
+    Array
+    BasicObject
+    Binding
+    Class
+    ClosedQueueError
+    Comparable
+    Complex
+    ConditionVariable
+    Data
+    Dir
+# ... (144 more lines)
 ```
 
 Top-level classes and modules of Ruby core and the standard library. A
