@@ -45,8 +45,13 @@ TIMED_OUT = :timeout
 OUTPUT = "out" # where each tool writes its docs, relative to the copied files
 RUBY = RbConfig.ruby
 RUBY_FILES = "**/*.rb"
-BOONDOC = [RUBY, "-I#{File.join(ROOT, "lib")}", File.join(ROOT, "exe", "boondoc"),
-           "--quiet", "--skip-readme", "-o", OUTPUT].freeze
+BOONDOC = [RUBY,
+           "-I#{File.join(ROOT, "lib")}",
+           File.join(ROOT, "exe", "boondoc"),
+           "--quiet",
+           "--skip-readme",
+           "-o",
+           OUTPUT].freeze
 
 # Progress goes to stderr, and only with --verbose.
 def log(message, newline: true)
@@ -72,8 +77,14 @@ end
 
 def comparison_tools
   Gem::Specification.find_by_name("yard-markdown") # the plugin is found by yard, but check it early
-  yard = [RUBY, Gem.bin_path("yard", "yard"), "doc", "--quiet", "--no-save", "--no-cache",
-          "--no-stats", "--no-yardopts"]
+  yard = [RUBY,
+          Gem.bin_path("yard", "yard"),
+          "doc",
+          "--quiet",
+          "--no-save",
+          "--no-cache",
+          "--no-stats",
+          "--no-yardopts"]
   {
     "YARD" => [*yard, "-o", OUTPUT, RUBY_FILES],
     "YARD + yard-markdown" => [*yard, "--plugin", "markdown", "--format=markdown", "-o", OUTPUT, RUBY_FILES],

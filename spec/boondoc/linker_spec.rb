@@ -6,13 +6,11 @@ RSpec.describe Boondoc::Linker do
       # Uses {Thor::Shell}, {Boondoc::Linker}, and {Rake::Task}.
       class Foo; end
     RUBY
-    expect(reporter.warnings).to eq(
-      [
-        "Foo: cannot resolve link to Thor::Shell",
-        "Foo: cannot resolve link to Boondoc::Linker",
-        "Foo: cannot resolve link to Rake::Task"
-      ]
-    )
+    expect(reporter.warnings).to eq([
+      "Foo: cannot resolve link to Thor::Shell",
+      "Foo: cannot resolve link to Boondoc::Linker",
+      "Foo: cannot resolve link to Rake::Task"
+    ])
   end
 
   describe "input that never closes" do

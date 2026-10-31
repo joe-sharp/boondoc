@@ -72,12 +72,8 @@ RSpec.describe Boondoc::Preview do
     it "installs it after confirmation and then serves" do
       Dir.mktmpdir do |dir|
         preview(dir) { true }.start
-        expect(commands.last(2)).to eq(
-          [
-            "gh extension install yusukebe/gh-markdown-preview",
-            "gh markdown-preview --host 127.0.0.1"
-          ]
-        )
+        expect(commands.last(2)).to eq(["gh extension install yusukebe/gh-markdown-preview",
+                                        "gh markdown-preview --host 127.0.0.1"])
       end
     end
 

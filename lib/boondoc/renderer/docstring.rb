@@ -25,9 +25,15 @@ module Boondoc
       # @return [Array<String>] markdown blocks, in order
       def render(docstring)
         [
-          callouts(docstring), text(docstring.text), parameters(docstring), yields(docstring),
+          callouts(docstring),
+          text(docstring.text),
+          parameters(docstring),
+          yields(docstring),
           TYPED.map { |name, title| section(title, docstring.tags_named(name).map { |tag| typed(tag) }) },
-          examples(docstring), see_also(docstring), meta(docstring), overloads(docstring)
+          examples(docstring),
+          see_also(docstring),
+          meta(docstring),
+          overloads(docstring)
         ].flatten.compact.reject(&:empty?)
       end
 

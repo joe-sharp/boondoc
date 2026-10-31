@@ -16,12 +16,10 @@ RSpec.describe Boondoc::Renderer::NamespacePage do
       end
       class C < B; end
     RUBY
-    expect(inherited_lines(pages["C.md"])).to eq(
-      [
-        "- From [`B`](B.md): [`#foo`](B.md#method-i-foo)",
-        "- From [`A`](A.md): [`#bar`](A.md#method-i-bar)"
-      ]
-    )
+    expect(inherited_lines(pages["C.md"])).to eq([
+      "- From [`B`](B.md): [`#foo`](B.md#method-i-foo)",
+      "- From [`A`](A.md): [`#bar`](A.md#method-i-bar)"
+    ])
   end
 
   it "links a superclass that shares the name of the class", :aggregate_failures do
