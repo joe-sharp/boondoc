@@ -16,8 +16,15 @@ module Boondoc
       @path_map = PathMap.new(config, registry)
       @assets = Assets.new(config)
       @stitcher = Stitcher.new(config, assets: assets)
-      @linker = Linker.new(config: config, registry: registry, filter: filter, path_map: path_map,
-                           stitcher: stitcher, assets: assets, reporter: reporter)
+      @linker = Linker.new(
+        config: config,
+        registry: registry,
+        filter: filter,
+        path_map: path_map,
+        stitcher: stitcher,
+        assets: assets,
+        reporter: reporter
+      )
       @meths = {}
       @aliases = {}
     end

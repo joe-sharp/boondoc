@@ -27,9 +27,14 @@ module Boondoc
       # @return [String] the whole page
       def render
         document([
-          "# #{title}", facts, Docstring.new(context, @namespace, @from).render(@namespace.docstring),
-          namespaces, constants, attributes,
-          SCOPES.keys.map { |scope| method_sections(scope) }, inherited_methods
+          "# #{title}",
+          facts,
+          Docstring.new(context, @namespace, @from).render(@namespace.docstring),
+          namespaces,
+          constants,
+          attributes,
+          SCOPES.keys.map { |scope| method_sections(scope) },
+          inherited_methods
         ])
       end
 
@@ -89,8 +94,13 @@ module Boondoc
         children = visible(@namespace.namespaces)
         return nil if children.empty?
 
-        ["## Namespaces", children.map { |child| bullet(linker.link(child, from: @from), summary(child, @from)) }
-          .join("\n")]
+        ["## Namespaces",
+         children.map { |child|
+           bullet(
+             linker.link(child, from: @from),
+             summary(child, @from)
+           )
+         }.join("\n")]
       end
 
       def constants

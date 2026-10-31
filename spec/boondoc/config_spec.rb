@@ -10,8 +10,12 @@ RSpec.describe Boondoc::Config do
   end
 
   it "expands directories, applies excludes and expands extra files", :aggregate_failures do
-    config = described_class.new(root: fixture_root("sample"), sources: ["lib"], exclude: ["lib/sample/*.rb"],
-                                 files: ["guides/*.md", "README.md"])
+    config = described_class.new(
+      root: fixture_root("sample"),
+      sources: ["lib"],
+      exclude: ["lib/sample/*.rb"],
+      files: ["guides/*.md", "README.md"]
+    )
     expect(config.source_files).to eq(["lib/sample.rb"])
     expect(config.extra_files).to eq(["guides/intro.md"])
   end
@@ -208,8 +212,11 @@ RSpec.describe Boondoc::Config do
 
     it "lets .boondoc.yml and then the overrides win, key by key", :aggregate_failures do
       write(".boondoc.yml", "title: Yml\nsources: lib\nexclude: []\n")
-      expect(load_config).to have_attributes(title: "Yml", source_files: %w[lib/a.rb lib/legacy.rb],
-                                             extra_files: ["CHANGELOG.md"])
+      expect(load_config).to have_attributes(
+        title: "Yml",
+        source_files: %w[lib/a.rb lib/legacy.rb],
+        extra_files: ["CHANGELOG.md"]
+      )
       expect(load_config(title: "Flag")).to have_attributes(title: "Flag")
     end
 
@@ -239,8 +246,12 @@ RSpec.describe Boondoc::Config do
 
     it "merges the config file under explicit overrides" do
       load_with_file(output: "elsewhere", strict: nil) do |config|
-        expect(config).to have_attributes(output: "elsewhere", private: true, strict: false,
-                                          extra_files: ["guides/intro.md"])
+        expect(config).to have_attributes(
+          output: "elsewhere",
+          private: true,
+          strict: false,
+          extra_files: ["guides/intro.md"]
+        )
       end
     end
 

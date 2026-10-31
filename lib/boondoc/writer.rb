@@ -102,9 +102,10 @@ module Boondoc
       end
       return if conflicts.empty?
 
-      raise Error, "refusing to overwrite #{conflicts.size} file(s) that boondoc did not generate " \
-                   "(#{conflicts.first(5).join(", ")}#{", ..." if conflicts.size > 5}). " \
-                   "Use --force to overwrite, or choose another --output directory."
+      raise Error,
+        "refusing to overwrite #{conflicts.size} file(s) that boondoc did not generate " \
+        "(#{conflicts.first(5).join(", ")}#{", ..." if conflicts.size > 5}). " \
+        "Use --force to overwrite, or choose another --output directory."
     end
 
     # True when a case-insensitive filesystem maps the path onto a page Boondoc wrote before.
@@ -120,8 +121,10 @@ module Boondoc
       paths.group_by(&:downcase).each_value do |group|
         next if group.size == 1
 
-        @reporter.warn("#{group.sort.join(" and ")} differ only by case and will collide on case-insensitive " \
-                       "filesystems; rename one of them")
+        @reporter.warn(
+          "#{group.sort.join(" and ")} differ only by case and will collide on case-insensitive " \
+          "filesystems; rename one of them"
+        )
       end
     end
 

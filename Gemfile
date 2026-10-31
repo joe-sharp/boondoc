@@ -8,6 +8,9 @@ gemspec
 gem "irb"
 gem "rake", "~> 13.0"
 gem "rspec", "~> 3.0"
+# Pinned to the unreleased `AllowedReceivers` option for Style/MethodCallWithArgsParentheses
+# (rubocop/rubocop#16193). Drop this once a RuboCop release includes it.
+gem "rubocop", github: "joe-sharp/rubocop", branch: "method-call-with-args-parentheses-allowed-receivers"
 gem "sharp_style_rubocop", "~> 0.1"
 gem "simplecov", "~> 0.22", require: false
 

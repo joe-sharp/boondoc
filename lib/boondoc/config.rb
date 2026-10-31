@@ -71,8 +71,9 @@ module Boondoc
       settings = YAML.safe_load_file(path, symbolize_names: true) || {}
       return settings unless settings.key?(:allow_outside_output)
 
-      raise Error, "allow_outside_output cannot be set in a config file, because the project being " \
-                   "documented is not trusted to choose it; pass --allow-outside-output on the command line"
+      raise Error,
+        "allow_outside_output cannot be set in a config file, because the project being " \
+        "documented is not trusted to choose it; pass --allow-outside-output on the command line"
     end
     private_class_method :read_file
 
@@ -172,9 +173,10 @@ module Boondoc
     def check_output_inside(path)
       return if path == root || path.start_with?(File.join(root, ""))
 
-      raise Error, "output directory #{path} is outside the project (#{root}). A project must not choose where " \
-                   "boondoc writes. To write there anyway, pass --allow-outside-output; that is a security " \
-                   "risk if you do not trust the project, and it is how docs are kept outside the repository."
+      raise Error,
+        "output directory #{path} is outside the project (#{root}). A project must not choose where " \
+        "boondoc writes. To write there anyway, pass --allow-outside-output; that is a security " \
+        "risk if you do not trust the project, and it is how docs are kept outside the repository."
     end
 
     def expand(patterns, ruby: false)

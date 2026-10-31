@@ -16,8 +16,11 @@ RSpec.describe Boondoc::Linker do
   describe "input that never closes" do
     let(:registry) { Boondoc::Model::Registry.new }
     let(:linker) do
-      context = Boondoc::Context.new(config: Boondoc::Config.new(root: Dir.pwd, readme: false),
-                                     registry: registry, reporter: quiet_reporter)
+      context = Boondoc::Context.new(
+        config: Boondoc::Config.new(root: Dir.pwd, readme: false),
+        registry: registry,
+        reporter: quiet_reporter
+      )
       context.linker
     end
 

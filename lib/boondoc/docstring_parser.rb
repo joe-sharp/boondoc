@@ -97,8 +97,14 @@ module Boondoc
       key, text = text.split(/\s+/, 2)
       default = text.to_s[/\A\((.*?)\)\s*/, 1]
       text = text.to_s.sub(/\A\(.*?\)\s*/, "") if default
-      Model::Tag.new(tag_name: "option", name: name, types: types, key: key, default: default,
-                     text: text.to_s.strip)
+      Model::Tag.new(
+        tag_name: "option",
+        name: name,
+        types: types,
+        key: key,
+        default: default,
+        text: text.to_s.strip
+      )
     end
 
     # `@see reference text`

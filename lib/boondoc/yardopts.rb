@@ -18,10 +18,37 @@ module Boondoc
     FILE = ".yardopts"
     # Long options of the yard gem that take an argument.
     ARGUMENT_OPTIONS = %w[
-      --load --plugin --db --exclude --api --no-api --hide-api --default-return --query --title
-      --readme --main --files --asset --output-dir --markup --markup-provider --charset --template
-      --template-path --format --locale --po-dir --tag --type-tag --type-name-tag --name-tag
-      --title-tag --hide-tag --transitive-tag --non-transitive-tag
+      --load
+      --plugin
+      --db
+      --exclude
+      --api
+      --no-api
+      --hide-api
+      --default-return
+      --query
+      --title
+      --readme
+      --main
+      --files
+      --asset
+      --output-dir
+      --markup
+      --markup-provider
+      --charset
+      --template
+      --template-path
+      --format
+      --locale
+      --po-dir
+      --tag
+      --type-tag
+      --type-name-tag
+      --name-tag
+      --title-tag
+      --hide-tag
+      --transitive-tag
+      --non-transitive-tag
     ].freeze
     # Long options whose argument is optional; it is the next token unless that starts with `-`.
     OPTIONAL_ARGUMENT_OPTIONS = %w[--use-cache --yardopts --no-yardopts --embed-mixin].freeze

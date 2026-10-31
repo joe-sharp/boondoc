@@ -40,8 +40,9 @@ module Boondoc
     option :skip_readme, type: :boolean, desc: "Do not include a README in the index page"
     option :files, type: :array, desc: "Extra markdown files or globs to stitch in"
     option :assets, type: :array, desc: "Files, directories, or globs to copy into the output (FROM or FROM:DIR)"
-    option :copy_linked_assets, type: :boolean,
-                                desc: "Also copy the files that pages embed, such as images in the README"
+    option :copy_linked_assets,
+      type: :boolean,
+      desc: "Also copy the files that pages embed, such as images in the README"
     option :exclude, type: :array, desc: "Ruby files or globs to leave out"
     option :title, type: :string, desc: "Title for the index page when there is no README"
     option :private, type: :boolean, desc: "Include private methods and @private objects"
@@ -50,9 +51,10 @@ module Boondoc
     option :yardopts, type: :boolean, desc: "Read .yardopts (default; --no-yardopts to skip it)"
     option :strict, type: :boolean, desc: "Exit non-zero if there are warnings"
     option :force, type: :boolean, desc: "Overwrite files in the output directory that boondoc did not write"
-    option :allow_outside_output, type: :boolean,
-                                  desc: "Allow an output directory outside the project (a security risk if the " \
-                                        "project is not trusted; for docs kept outside the repository)"
+    option :allow_outside_output,
+      type: :boolean,
+      desc: "Allow an output directory outside the project (a security risk if the " \
+            "project is not trusted; for docs kept outside the repository)"
     option :config, aliases: "-c", type: :string, desc: "Config file (default: .boondoc.yml)"
     option :quiet, aliases: "-q", type: :boolean, desc: "Only print warnings and errors"
     def generate(*globs)

@@ -9,7 +9,10 @@ RSpec.describe Boondoc::Yardopts do
 
   it "reads sources, extra files after a dash, the title, and visibility", :aggregate_failures do
     expect(settings(%(--title "My Gem" --private --protected lib app/**/*.rb - CHANGELOG.md guides/*.md))).to eq(
-      title: "My Gem", private: true, protected: true, sources: ["lib", "app/**/*.rb"],
+      title: "My Gem",
+      private: true,
+      protected: true,
+      sources: ["lib", "app/**/*.rb"],
       files: ["CHANGELOG.md", "guides/*.md"]
     )
   end

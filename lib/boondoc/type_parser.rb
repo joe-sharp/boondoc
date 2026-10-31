@@ -52,7 +52,7 @@ module Boondoc
       depth = 0
       text.each_char.with_index do |char, index|
         depth += depth_change(text, char, index) unless skip.include?(index)
-        yield char, index, depth
+        yield(char, index, depth)
       end
     end
 

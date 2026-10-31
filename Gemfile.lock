@@ -1,3 +1,20 @@
+GIT
+  remote: https://github.com/joe-sharp/rubocop.git
+  revision: de80448bdaa7821dc3933ff44a3cb4fcd57e0ca3
+  branch: method-call-with-args-parentheses-allowed-receivers
+  specs:
+    rubocop (1.92.2)
+      json (>= 2.3)
+      language_server-protocol (~> 3.17.0.2)
+      lint_roller (~> 1.1.0)
+      parallel (>= 1.10)
+      parser (>= 3.3.0.2)
+      rainbow (>= 2.2.2, < 4.0)
+      regexp_parser (>= 2.11.3, < 3.0)
+      rubocop-ast (>= 1.49.0, < 2.0)
+      ruby-progressbar (~> 1.7)
+      unicode-display_width (>= 2.4.0, < 4.0)
+
 PATH
   remote: .
   specs:
@@ -109,17 +126,6 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.13.0)
     rspec-support (3.13.7)
-    rubocop (1.92.0)
-      json (>= 2.3)
-      language_server-protocol (~> 3.17.0.2)
-      lint_roller (~> 1.1.0)
-      parallel (>= 1.10)
-      parser (>= 3.3.0.2)
-      rainbow (>= 2.2.2, < 4.0)
-      regexp_parser (>= 2.11.3, < 3.0)
-      rubocop-ast (>= 1.49.0, < 2.0)
-      ruby-progressbar (~> 1.7)
-      unicode-display_width (>= 2.4.0, < 4.0)
     rubocop-ast (1.50.0)
       parser (>= 3.3.7.2)
       prism (~> 1.7)
@@ -132,7 +138,7 @@ GEM
       regexp_parser (>= 2.0)
       rubocop (~> 1.86, >= 1.86.2)
     ruby-progressbar (1.13.0)
-    sharp_style_rubocop (0.1.0)
+    sharp_style_rubocop (0.1.5)
       rubocop (~> 1.92)
       rubocop-performance (~> 1.20)
       rubocop-rspec (~> 3.0)
@@ -166,6 +172,7 @@ DEPENDENCIES
   ostruct
   rake (~> 13.0)
   rspec (~> 3.0)
+  rubocop!
   sharp_style_rubocop (~> 0.1)
   simplecov (~> 0.22)
   yard (~> 0.9)
@@ -220,12 +227,12 @@ CHECKSUMS
   rspec-expectations (3.13.5) sha256=33a4d3a1d95060aea4c94e9f237030a8f9eae5615e9bd85718fe3a09e4b58836
   rspec-mocks (3.13.8) sha256=086ad3d3d17533f4237643de0b5c42f04b66348c28bf6b9c2d3f4a3b01af1d47
   rspec-support (3.13.7) sha256=0640e5570872aafefd79867901deeeeb40b0c9875a36b983d85f54fb7381c47c
-  rubocop (1.92.0) sha256=2af68041fb2e70bd9321d0479b49fad07f8008a3d0758c83347b4917128c56e0
+  rubocop (1.92.2)
   rubocop-ast (1.50.0) sha256=b9ca88300da0803ee222ad20cdb30494c0a784eed06fdc35d254b06d662788db
   rubocop-performance (1.27.0) sha256=eeeb1374d062a368ee1c787b70eb0b0cc4b184cb1f8565f424760946146d61ce
   rubocop-rspec (3.10.2) sha256=0b3e2ecc592cd10ecbf0095bb58d1e357905276e069643523cc19eb7495f65e2
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
-  sharp_style_rubocop (0.1.0) sha256=76b283c707eeda081e228ca3341eaa1c90d70c769360aca4e03d08cef0917592
+  sharp_style_rubocop (0.1.5) sha256=bb75ff29653e6d64324df2c4ff794d5458c69183ef4c47ecf1c621a27862df11
   shellany (0.0.1) sha256=0e127a9132698766d7e752e82cdac8250b6adbd09e6c0a7fbbb6f61964fedee7
   simplecov (0.22.0) sha256=fe2622c7834ff23b98066bb0a854284b2729a569ac659f82621fc22ef36213a5
   simplecov-html (0.13.2) sha256=bd0b8e54e7c2d7685927e8d6286466359b6f16b18cb0df47b508e8d73c777246

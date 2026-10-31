@@ -71,8 +71,10 @@ module Boondoc
         merge_yard(files & @registry.directive_files)
       elsif @registry.directive_sites.any?
         sites = @registry.directive_sites
-        @reporter.warn("#{sites.size} comment(s) use YARD directives (@!macro, @!method, ...), which boondoc " \
-                       "does not expand on its own; rerun with --yard-macros. First: #{sites.first(3).join(", ")}")
+        @reporter.warn(
+          "#{sites.size} comment(s) use YARD directives (@!macro, @!method, ...), which boondoc " \
+          "does not expand on its own; rerun with --yard-macros. First: #{sites.first(3).join(", ")}"
+        )
       end
     end
 
@@ -81,8 +83,10 @@ module Boondoc
       @reporter.info("yard: added #{added} object(s) from macros and directives")
       return unless yard_files.empty?
 
-      @reporter.warn("yard: no YARD macros or directives were found; disable yard_macros " \
-                     "(--yard-macros) for this project")
+      @reporter.warn(
+        "yard: no YARD macros or directives were found; disable yard_macros " \
+        "(--yard-macros) for this project"
+      )
     end
 
     def pages_for(context)
@@ -105,9 +109,11 @@ module Boondoc
 
     def finish(pages, assets, removed)
       warnings = @reporter.warnings
-      @reporter.info("boondoc: wrote #{pages.size} file(s) and #{assets.size} asset(s) to #{@config.output}" \
-                     "#{", removed #{removed.size} stale" if removed.any?}" \
-                     "#{", #{warnings.size} warning(s)" if warnings.any?}")
+      @reporter.info(
+        "boondoc: wrote #{pages.size} file(s) and #{assets.size} asset(s) to #{@config.output}" \
+        "#{", removed #{removed.size} stale" if removed.any?}" \
+        "#{", #{warnings.size} warning(s)" if warnings.any?}"
+      )
       raise Error, "#{warnings.size} warning(s) in strict mode" if @config.strict && warnings.any?
 
       Result.new(pages: pages.keys.sort, assets: assets.keys.sort, removed: removed, warnings: warnings)
