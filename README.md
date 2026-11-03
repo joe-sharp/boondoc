@@ -307,8 +307,10 @@ Boondoc does not expand YARD macros and directives (`@!macro`, `@!method`,
 pass `--yard-macros`:
 
 ```ruby
-gem 'yard', group: :development
+gem 'yard', '>= 0.9.39', group: :development
 ```
+
+Older yard releases fail to load on Ruby 4.0, which no longer ships `ostruct`.
 
 Prism remains the source of truth. YARD is run as a second pass and only
 contributes the objects that directives create and the expanded docstrings of

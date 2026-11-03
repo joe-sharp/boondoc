@@ -52,3 +52,38 @@ jobs:
         env:
           COVERAGE: true
         run: bundle exec rspec
+
+  appraisal:
+    runs-on: ubuntu-latest
+    # Names each job "RSpec (Ruby <version>, <gemfile>)". The extra job from `include` runs
+    # without yard, so its name gets ", no yard" added: "RSpec (Ruby 4.0, prism_1, no yard)".
+    name: RSpec (Ruby ${{ matrix.ruby }}, ${{ matrix.gemfile }}${{ matrix.without != 'development' && ', no yard' || '' }})
+    strategy:
+      fail-fast: false
+      matrix:
+        ruby:
+          - '3.3'
+          - '3.4'
+          - '4.0'
+        gemfile:
+          - oldest
+          - prism_1
+          - prism_2
+        without:
+          - 'development'
+        include:
+          - ruby: '4.0'
+            gemfile: prism_1
+            without: 'development:yard'
+    env:
+      BUNDLE_GEMFILE: gemfiles/${{ matrix.gemfile }}.gemfile
+      BUNDLE_WITHOUT: ${{ matrix.without }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Set up Ruby and bundle
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: ${{ matrix.ruby }}
+          bundler-cache: true
+      - name: RSpec
+        run: bundle exec rspec
