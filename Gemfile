@@ -5,7 +5,6 @@ source "https://rubygems.org"
 # Specify your gem's dependencies in boondoc.gemspec
 gemspec
 
-gem "irb"
 gem "rake", "~> 13.0"
 gem "rspec", "~> 3.0"
 # Pinned to the unreleased `AllowedReceivers` option for Style/MethodCallWithArgsParentheses
@@ -20,11 +19,14 @@ group :yard do
 end
 
 group :development do
+  gem "appraisal2", "~> 3.2"
+  gem "appraisal2-rubocop", "~> 1.0", require: false
   gem "guard", "~> 2.20"
   gem "guard-boondoc"
   gem "guard-rspec", "~> 4.7"
   gem "guard-rubocop", "~> 1.5"
   gem "guard-shell", "~> 0.7"
   gem "guard-status"
+  gem "irb"
   gem "ostruct" # guard-rspec's DSL requires it; no longer a default gem in Ruby 4.0
 end
