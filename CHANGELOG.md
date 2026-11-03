@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-03
+
 ### 📦 Dependencies
 - **prism 2.x is now allowed** (`>= 1.0, < 3`). The thor floor is now 1.2, down from 1.3; thor 1.0 and 1.1 fail to load on Ruby 3.4 and later.
 - The README now asks for yard 0.9.39 or later with `--yard-macros`, since older releases fail on Ruby 4.0.
