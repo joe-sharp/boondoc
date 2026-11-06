@@ -25,7 +25,8 @@ RSpec.describe Boondoc::Generator do
 
   it "matches the golden output for every page" do
     pages.each do |path, content|
-      expect(content).to eq(File.read(File.join(expected_dir, path))), "#{path} differs from the golden file"
+      golden = File.read(File.join(expected_dir, path), encoding: Encoding::UTF_8)
+      expect(content).to eq(golden), "#{path} differs from the golden file"
     end
   end
 

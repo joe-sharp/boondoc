@@ -15,7 +15,7 @@ module Boondoc
       # @param label [String] the path to record on objects (usually relative to the project)
       # @return [void]
       def parse_file(path, label: path)
-        parse(File.read(path), label)
+        parse(File.read(path, encoding: Encoding::UTF_8), label)
       end
 
       # @param source [String] Ruby source

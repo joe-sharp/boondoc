@@ -43,7 +43,7 @@ module Boondoc
       path = File.join(@output_dir, MANIFEST)
       return [] unless File.file?(path)
 
-      File.readlines(path, chomp: true).reject(&:empty?)
+      File.readlines(path, chomp: true, encoding: Encoding::UTF_8).reject(&:empty?)
     end
 
     def check(paths, previous)
