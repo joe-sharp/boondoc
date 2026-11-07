@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+def ask(question, default = nil)
+  print default ? "#{question} [#{default}]: " : "#{question}: "
+  answer = $stdin.gets.to_s.strip
+  answer.empty? ? default : answer
+end
+
+def run(*cmd)
+  puts "$ #{cmd.join(" ")}"
+  system(*cmd) || abort("Failed: #{cmd.join(" ")}")
+end
+
+abort "GEM_HOST_API_KEY is not set" if ENV["GEM_HOST_API_KEY"].to_s.empty?
+
+run("git", "checkout", "main")
+run("git", "pull", "--ff-only", "origin", "main")
+abort "main does not match origin/main" unless `git rev-parse main`.strip == `git rev-parse origin/main`.strip
+abort "Working tree is not clean" unless `git status --porcelain`.empty?
+
+require_relative "../lib/boondoc/version"
+
+changelog = File.read("CHANGELOG.md", encoding: "UTF-8")
+latest = changelog[/^## \[(\d+\.\d+\.\d+)\]/, 1] or abort "No version in CHANGELOG.md"
+description = ask("Release description") or abort "A description is required"
+tag = ask("Release", "v#{latest}")
+
+abort "#{tag} is not vX.Y.Z" unless tag.match?(/\Av\d+\.\d+\.\d+\z/)
+abort "#{tag} does not match Boondoc::VERSION (#{Boondoc::VERSION})" unless tag == "v#{Boondoc::VERSION}"
+abort "#{tag} already exists" if system("git", "rev-parse", "-q", "--verify", "refs/tags/#{tag}", out: File::NULL)
+
+puts "\nTag #{tag}: #{description}"
+exit unless ask("Tag, push, build and publish? (y/N)").to_s.downcase.start_with?("y")
+
+run "git", "tag", "-a", tag, "-m", description
+run "git", "push", "origin", tag
+
+gem_file = "pkg/boondoc-#{Boondoc::VERSION}.gem"
+run("gem", "build", "boondoc.gemspec", "--output", gem_file)
+run("gem", "push", gem_file)
+run("gem", "push", "--host", "https://gem.coop/@joe-sharp", gem_file)
