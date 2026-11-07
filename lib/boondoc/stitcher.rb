@@ -55,7 +55,7 @@ module Boondoc
     private
 
     def load(source, output, readme: false)
-      content = File.read(File.expand_path(source, @config.root))
+      content = File.read(File.expand_path(source, @config.root), encoding: Encoding::UTF_8)
       content = "# #{File.basename(source)}\n\n```\n#{content.rstrip}\n```\n" unless MARKDOWN.match?(source)
       ExtraFile.new(source: source, output: output, content: content, readme: readme)
     end

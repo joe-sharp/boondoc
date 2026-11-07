@@ -68,7 +68,7 @@ module Boondoc
       path = File.join(root, FILE)
       return nil unless File.file?(path)
 
-      parse(File.read(path))
+      parse(File.read(path, encoding: Encoding::UTF_8))
     rescue SystemCallError => e
       raise Error, "could not read #{FILE}: #{e.message}"
     end

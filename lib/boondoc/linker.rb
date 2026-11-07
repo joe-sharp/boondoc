@@ -95,7 +95,7 @@ module Boondoc
     # Only files inside the project can be included.
     def read_file(path)
       full = File.expand_path(path, @config.root)
-      File.read(full) if File.file?(full) && Containment.inside?(full, @config.root)
+      File.read(full, encoding: Encoding::UTF_8) if File.file?(full) && Containment.inside?(full, @config.root)
     end
 
     def reference(match, object, from)

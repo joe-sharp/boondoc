@@ -13,4 +13,8 @@ require "boondoc/rake_task"
 
 Boondoc::RakeTask.new(:docs)
 
+Rake::Task["release"].clear
+desc "Tag, push, build and publish a release (interactive)"
+task(:release) { exec "bin/release" }
+
 task default: %i[spec rubocop]

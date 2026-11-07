@@ -1,5 +1,10 @@
 ## [Unreleased]
 
+## [0.2.1] - 2026-11-06
+
+### 🐛 Fixes
+- **Files are read as UTF-8** regardless of the system locale. Under a US-ASCII locale (common when running under Guard), a README or other file with a non-ASCII character failed with `invalid byte sequence in US-ASCII`.
+
 ## [0.2.0] - 2026-11-03
 
 ### 📦 Dependencies

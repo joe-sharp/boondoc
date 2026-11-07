@@ -58,6 +58,12 @@ RSpec.describe Boondoc::Stitcher do
     end
   end
 
+  it "reads files as UTF-8 regardless of the default external encoding" do
+    write("README.md", "# Café ✓\n")
+    allow(Encoding).to receive(:default_external).and_return(Encoding::US_ASCII)
+    expect(stitcher.readme.content).to eq("# Café ✓\n")
+  end
+
   describe "#find" do
     let(:stitched) do
       write("guides/intro.md")
