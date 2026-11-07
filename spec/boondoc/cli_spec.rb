@@ -2,7 +2,7 @@
 
 RSpec.describe Boondoc::CLI do
   def run_cli(dir, *args)
-    Dir.chdir(dir) { described_class.start_with_default(args) }
+    Dir.chdir(dir) { described_class.start_with_default(args) } # rubocop:disable ThreadSafety/DirChdir -- specs run sequentially in one process
   end
 
   it "generates documentation when given no command", :aggregate_failures do
