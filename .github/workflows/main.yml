@@ -54,7 +54,8 @@ jobs:
         run: bundle exec rspec
 
   appraisal:
-    runs-on: ubuntu-latest
+    # Pinned: ubuntu-26.04 (current ubuntu-latest) has a GCC that fails to build prism 1.0.0 (the oldest gemfile).
+    runs-on: ubuntu-24.04
     # Names each job "RSpec (Ruby <version>, <gemfile>)". The extra job from `include` runs
     # without yard, so its name gets ", no yard" added: "RSpec (Ruby 4.0, prism_1, no yard)".
     name: RSpec (Ruby ${{ matrix.ruby }}, ${{ matrix.gemfile }}${{ matrix.without != 'development' && ', no yard' || '' }})
