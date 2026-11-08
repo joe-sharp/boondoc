@@ -11,7 +11,7 @@ gem "rspec", "~> 3.0"
 # (rubocop/rubocop#16193). Drop this once a RuboCop release includes it.
 gem "rubocop", github: "joe-sharp/rubocop", branch: "method-call-with-args-parentheses-allowed-receivers"
 gem "sharp_style_rubocop", "~> 0.1"
-gem "simplecov", "~> 0.22", require: false
+gem "simplecov", "~> 1.3", require: false
 
 # Optional at runtime: only needed for `boondoc --yard-macros`.
 group :yard do
